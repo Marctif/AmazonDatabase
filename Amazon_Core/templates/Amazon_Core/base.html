@@ -1,0 +1,73 @@
+{% load staticfiles %}
+{% load static %}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+    <link href='http://fonts.which is googleapis.com/css?family=Roboto:400,300,300italic,500,400italic,700,700italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="//storage.googleapis.com/code.getmdl.io/1.0.1/material.teal-red.min.css" />
+    <script src="//storage.googleapis.com/code.getmdl.io/1.0.1/material.min.js"></script>
+
+    <style>
+
+    </style>
+
+</head>
+<body>
+
+
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row">
+      <span class="mdl-layout-title">AmazonDatabase</span>
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+                <a class="mdl-navigation__link" href="#">Home</a>
+                <a class="mdl-navigation__link" href="#">About</a>
+                <a class="mdl-navigation__link" href="#">Contact</a>
+      </nav>
+
+            <!-- start search form -->
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
+                <label class="mdl-button mdl-js-button mdl-button--icon" for="search-expandable">
+                    <i class="material-icons">search</i>
+                </label>
+                <div class="mdl-textfield__expandable-holder">
+                    <input class="mdl-textfield__input" type="text" id="search-expandable" />
+                    <label class="mdl-textfield__label" for="search-expandable">Search text</label>
+                </div>
+            </div>
+            <!-- end search form -->
+
+    </div>
+  </header>
+    <div class="mdl-layout__drawer">
+    <span class="mdl-layout-title">Acme</span>
+    <nav class="mdl-navigation">
+      <a class="mdl-navigation__link" href="#">Products</a>
+      <a class="mdl-navigation__link" href="#">Services</a>
+      <a class="mdl-navigation__link" href="#">Portfolios</a>
+      <a class="mdl-navigation__link" href="#">Achievements</a>
+      <a class="mdl-navigation__link" href="#">Blog</a>
+    </nav>
+  </div>
+</div>
+
+
+
+<!-- End of Navbar -->
+
+  <div class="col-md-12" >
+      <br>
+      <br>
+      <br>
+  </div>
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>
