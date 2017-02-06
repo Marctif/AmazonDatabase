@@ -1,0 +1,45 @@
+{% extends 'Amazon_Core/base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+
+
+    {% load material_form %}
+
+    <div class="col-md-12">
+    <h1 style="text-align: center" > This is our User Signup page</h1>
+
+   <div class="row">
+
+
+
+
+      <div class="col s4"></div>
+      <div class="col s4">
+             <form method="POST">
+        {% csrf_token %}
+        {% form form=form %}
+            {% part form.first_name label %}<label for="id_first_name">First name</label>{% endpart %}
+            {% part form.last_name label %}<label for="id_last_name">Last name</label>{% endpart %}
+            {% part form.email label %}<label for="id_email">Email</label>{% endpart %}
+            {% part form.password label %}<label for="id_password">Password</label>{% endpart %}
+        {% endform %}
+        <button type="submit" name="_submit" class="btn">Submit</button>
+    </form>
+          </div>
+      <div class="col s4"></div>
+    </div>
+
+
+
+
+
+    </div>
+    <!-- Simple Textfield -->
+
+
+
+
+{% endblock %}

@@ -31,13 +31,18 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'material.theme.lightgreen',
+    'material',
+    'material.frontend',
+    'material.admin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Amazon_Core'
+    'Amazon_Core',
+
 ]
 
 MIDDLEWARE = [
@@ -77,8 +82,13 @@ WSGI_APPLICATION = 'AmazonDatabase.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': 'amazontest',
+        'ENGINE': 'mysql.connector.django',
+        'USER': 'root',
+        'PASSWORD': 'm08tfrea',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+
     }
 }
 
@@ -113,7 +123,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
