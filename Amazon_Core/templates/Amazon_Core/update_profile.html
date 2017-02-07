@@ -3,9 +3,44 @@
 
 {% block content %}
 
+
+
+
+    {% load material_form %}
+
     <div class="col-md-12">
-    <h1 style="text-align: center" > Profile Update Page</h1>
+    <h1 style="text-align: center" > This is our update profile page</h1>
+
+   <div class="row">
+      <div class="col s4"></div>
+      <div class="col s4">
+             <form method="POST">
+        {% csrf_token %}
+
+         <h4>Personal Info</h4>
+        {% form form=form1 %}
+
+        {% endform %}
+
+        <br>
+        <h4>Shipping Address</h4>
+
+        {% form form=form2 %}
+
+        {% endform %}
+        <button type="submit" name="_submit" class="btn">Submit</button>
+    </form>
+          </div>
+      <div class="col s4"></div>
     </div>
+
+
+
+
+
+    </div>
+    <!-- Simple Textfield -->
+
 
 
 
