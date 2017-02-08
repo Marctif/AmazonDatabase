@@ -49,7 +49,7 @@ def signup(request):
             password_Val = form.cleaned_data.get('password')
 
             try:
-                User.objects.create(
+                User.objects.create_user(
                     first_name = first_name_Val,
                     last_name = last_name_Val,
                     email = email_Val,
@@ -78,7 +78,10 @@ def update_profile_temp(request):
             # ...
             # redirect to a new URL:
 
-            #first_name_Val= form.cleaned_data.get('first_name')
+            first_name_Val= form1.cleaned_data.get('first_name')
+            street_Val = form2.cleaned_data.get('street')
+            print(first_name_Val)
+            print (street_Val)
             #last_name_Val = form.cleaned_data.get('last_name')
             #email_Val = form.cleaned_data.get('email')
             #password_Val = form.cleaned_data.get('password')
