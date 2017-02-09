@@ -40,9 +40,10 @@ class UserLoginForm(forms.Form):
         return super(UserLoginForm, self).clean(*args, **kwargs)
 
 class CustomerProfileForm(forms.Form):
-    first_name = forms.CharField(label="first_name", required=True)
-    last_name = forms.CharField(label="last_name", required=True)
-    birthday = forms.DateField(label="date", required=True)
+    first_name = forms.CharField(label="First name", required=True)
+    last_name = forms.CharField(label="Last name", required=True)
+    birthday = forms.DateField(label="Birthday", required=True)
+
 
     def clean(self):
         cleaned_data = super(CustomerProfileForm, self).clean()
@@ -68,4 +69,35 @@ class ShippingAddressForm(forms.Form):
         state = cleaned_data.get('state')
         zipcode = cleaned_data.get('zipcode')
 
+YEARS = (
+    ("2017", "2017"),
+    ("2018", "2018"),
+    ("2019", "2019"),
+    ("2020", "2020"),
+    ("2021", "2021"),
+    ("2022", "2022"),
+    ("2023", "2023"),
+)
+MONTHS = (
+    ("JAN", "1"),
+    ("FEB", "2"),
+    ("APR", "3"),
+    ("MAY", "4"),
+    ("JUNE", "5"),
 
+)
+
+class CreditCardForm(forms.Form):
+    number = forms.IntegerField(label="Credit card Number")
+    securityCode = forms.IntegerField(label="Security Code")
+    month = forms.ChoiceField(choices=MONTHS, label="Month", initial='', widget=forms.Select(), required=True)
+    year = forms.ChoiceField(choices=YEARS, label="Years", initial='', widget=forms.Select(), required=True)
+
+    def clean(self):
+        cleaned_data = super(CreditCardForm, self).clean()
+
+        # get form values
+        number = cleaned_data.get('number')
+        securityCode = cleaned_data.get('securityCode')
+        month = cleaned_data.get('month')
+        year = cleaned_data.get('year')

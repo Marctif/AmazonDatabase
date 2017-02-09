@@ -64,3 +64,37 @@ class Choice(models.Model):
 class demo(models.Model):
     idTest = models.IntegerField(default=0)
     text = models.CharField(max_length=200)
+
+class school(models.Model):
+    name = models.CharField(max_length=100)
+    district = models.CharField(max_length=100)
+    size = models.IntegerField(default=0)
+
+
+class teacher(models.Model):
+    school = models.ForeignKey(school, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+
+class Order(models.Model):
+    lineitem = models.CharField(max_length=50,default = None)
+    custProfile = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)
+    payMethod = models.ForeignKey(CreditCard, on_delete=models.CASCADE)
+    amount = models.PositiveIntegerField(default=0)
+
+class Shipment(models.Model):
+    STATUS = (
+        ('OR', 'Ordered'),
+        ('SP', 'Shipped'),
+        ('DE', 'Delivered'),
+    )
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    status = models.CharField(max_length=5, choices=STATUS, default='OR',)
+    estimated_date = models.DateField(default=datetime.now, blank=True)
+    shipped_date = models.DateField(default=datetime.now, blank=True)
+
+class Timestamps(models.Model):
+    shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(default=datetime.now, blank=True)
+    description = models.CharField(max_length=20)
+    City = models.CharField(max_length=10)
+    State = models.CharField(max_length=10)

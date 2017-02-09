@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Question, Choice, demo, CustomerProfile, BillingAddress, ShippingAddress, CreditCard
+from .models import Question, Choice, demo, CustomerProfile, BillingAddress, ShippingAddress, CreditCard, school, teacher, Order, Timestamps,Shipment
 
 
 
@@ -25,3 +25,9 @@ admin.site.register(CustomerProfile, CustomerProfileAdmin)
 admin.site.register(CreditCard)
 admin.site.register(BillingAddress)
 admin.site.register(ShippingAddress)
+admin.site.register(school)
+admin.site.register(teacher)
+admin.site.register(Order)
+admin.site.register(Shipment)
+admin.site.register(Timestamps)
+
