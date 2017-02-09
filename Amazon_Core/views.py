@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from .forms import RegisterForm, UserLoginForm, CustomerProfileForm, ShippingAddressForm, CreditCardForm
+from .forms import RegisterForm, UserLoginForm, CustomerProfileForm, ShippingAddressForm, CreditCardForm, BillingAddressForm
 from .models import Question, demo, CustomerProfile, ShippingAddress, CreditCard
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_list_or_404, get_object_or_404
@@ -158,8 +158,8 @@ def update_profile_temp(request):
             form1 = CustomerProfile()
             form2 = ShippingAddressForm()
             form3 = CreditCardForm()
-
-    return render(request, 'Amazon_Core/update_profile.html',  {'form1': form1, 'form2' : form2, 'form3': form3  })
+        form4 = BillingAddressForm()
+    return render(request, 'Amazon_Core/update_profile.html',  {'form1': form1, 'form2' : form2, 'form3': form3, 'form4':form4  })
 
 def logout_view(request):
     logout(request)
