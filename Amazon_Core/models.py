@@ -14,17 +14,17 @@ class CustomerProfile(models.Model):
 
 class ShippingAddress(models.Model):
     custProfile = models.ForeignKey(CustomerProfile)
-    Street = models.CharField(max_length=50)
-    City = models.CharField(max_length=50)
-    State = models.CharField(max_length=50)
-    Zipcode = models.IntegerField()
+    Street = models.CharField(max_length=50, null=True)
+    City = models.CharField(max_length=50, null=True)
+    State = models.CharField(max_length=50, null=True)
+    Zipcode = models.IntegerField(null=True)
 
 class BillingAddress(models.Model):
     custProfile = models.ForeignKey(CustomerProfile)
-    Street = models.CharField(max_length=50)
-    City = models.CharField(max_length=50)
-    State = models.CharField(max_length=50)
-    Zipcode = models.IntegerField()
+    Street = models.CharField(max_length=50, null=True)
+    City = models.CharField(max_length=50, null=True)
+    State = models.CharField(max_length=50, null=True)
+    Zipcode = models.IntegerField( null=True)
 
 YEARS = (
     ("2017", "2017"),
@@ -36,20 +36,20 @@ YEARS = (
     ("2023", "2023"),
 )
 MONTHS = (
-    ("JAN", "1"),
-    ("FEB", "2"),
-    ("APR", "3"),
-    ("MAY", "4"),
-    ("JUNE", "5"),
+    (1, 1),
+    (2, 2),
+    (3, 3),
+    (4, 4),
+    (5, 5),
 
 )
 
 class CreditCard(models.Model):
     custProfile = models.ForeignKey(CustomerProfile)
-    CreditCardNumber = models.IntegerField()
-    SecurityCode = models.IntegerField()
-    ExpMonth = models.IntegerField(choices=MONTHS, default=1)
-    ExpYear = models.IntegerField(choices=YEARS, default=2017)
+    CreditCardNumber = models.IntegerField(null=True)
+    SecurityCode = models.IntegerField(null=True)
+    ExpMonth = models.IntegerField(choices=MONTHS, default=1,null=True)
+    ExpYear = models.IntegerField(choices=YEARS, default=2017,null=True)
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)

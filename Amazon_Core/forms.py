@@ -70,35 +70,35 @@ class ShippingAddressForm(forms.Form):
         zipcode = cleaned_data.get('zipcode')
 
 class BillingAddressForm(forms.Form):
-    street = forms.CharField(label="street", required=True)
-    city = forms.CharField(label="city", required=True)
-    state = forms.CharField(label="state", required=True)
-    zipcode = forms.IntegerField(label="zipcode", required=True)
+    streetB = forms.CharField(label="street", required=True)
+    cityB = forms.CharField(label="city", required=True)
+    stateB = forms.CharField(label="state", required=True)
+    zipcodeB = forms.IntegerField(label="zipcode", required=True)
 
     def clean(self):
         cleaned_data = super(BillingAddressForm, self).clean()
 
         # get form values
-        street = cleaned_data.get('street')
-        city = cleaned_data.get('city')
-        state = cleaned_data.get('state')
-        zipcode = cleaned_data.get('zipcode')
+        streetB = cleaned_data.get('streetB')
+        cityB = cleaned_data.get('cityB')
+        stateB = cleaned_data.get('stateB')
+        zipcodeB = cleaned_data.get('zipcodeB')
 
 YEARS = (
-    ("2017", "2017"),
-    ("2018", "2018"),
-    ("2019", "2019"),
-    ("2020", "2020"),
-    ("2021", "2021"),
-    ("2022", "2022"),
-    ("2023", "2023"),
+    (2017, "2017"),
+    (2018, "2018"),
+    (2019, "2019"),
+    (2020, "2020"),
+    (2021, "2021"),
+    (2022, "2022"),
+    (2023, "2023"),
 )
 MONTHS = (
-    ("JAN", "1"),
-    ("FEB", "2"),
-    ("APR", "3"),
-    ("MAY", "4"),
-    ("JUNE", "5"),
+    (1, "1"),
+    (2, "2"),
+    (3, "3"),
+    (4, "4"),
+    (5, "5"),
 
 )
 
