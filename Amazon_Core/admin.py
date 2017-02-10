@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Question, Choice, demo, CustomerProfile, BillingAddress, ShippingAddress, CreditCard, school, teacher, Order, Timestamps,Shipment
+from .models import CustomerProfile, BillingAddress, ShippingAddress, CreditCard, Order, Timestamps,Shipment
 
 
 
@@ -18,15 +18,10 @@ class CreditCardInline(admin.TabularInline):
 class CustomerProfileAdmin(admin.ModelAdmin):
     inlines = [ShippingAddressInline, BillingAddressInline, CreditCardInline]
 
-admin.site.register(Question)
-admin.site.register(Choice)
-admin.site.register(demo)
 admin.site.register(CustomerProfile, CustomerProfileAdmin)
 admin.site.register(CreditCard)
 admin.site.register(BillingAddress)
 admin.site.register(ShippingAddress)
-admin.site.register(school)
-admin.site.register(teacher)
 admin.site.register(Order)
 admin.site.register(Shipment)
 admin.site.register(Timestamps)

@@ -19,12 +19,18 @@ class ShippingAddress(models.Model):
     State = models.CharField(max_length=50, null=True)
     Zipcode = models.IntegerField(null=True)
 
+    def __str__(self):
+        return self.Street + " " + self.City + " " + self.State + " " + str(self.Zipcode)
+
 class BillingAddress(models.Model):
     custProfile = models.ForeignKey(CustomerProfile)
     Street = models.CharField(max_length=50, null=True)
     City = models.CharField(max_length=50, null=True)
     State = models.CharField(max_length=50, null=True)
     Zipcode = models.IntegerField( null=True)
+
+    def __str__(self):
+        return self.Street + " " + self.City + " " + self.State + " " + str(self.Zipcode)
 
 YEARS = (
     ("2017", "2017"),
@@ -51,35 +57,17 @@ class CreditCard(models.Model):
     ExpMonth = models.IntegerField(choices=MONTHS, default=1,null=True)
     ExpYear = models.IntegerField(choices=YEARS, default=2017,null=True)
 
-class Question(models.Model):
-    question_text = models.CharField(max_length=200)
-    pub_date = models.DateTimeField('date published')
-
-
-class Choice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice_text = models.CharField(max_length=200)
-    votes = models.IntegerField(default=0)
-
-class demo(models.Model):
-    idTest = models.IntegerField(default=0)
-    text = models.CharField(max_length=200)
-
-class school(models.Model):
-    name = models.CharField(max_length=100)
-    district = models.CharField(max_length=100)
-    size = models.IntegerField(default=0)
-
-
-class teacher(models.Model):
-    school = models.ForeignKey(school, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
+    def __str__(self):
+        return str(self.CreditCardNumber)
 
 class Order(models.Model):
     lineitem = models.CharField(max_length=50,default = None)
     custProfile = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)
     payMethod = models.ForeignKey(CreditCard, on_delete=models.CASCADE)
     amount = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return self.lineitem
 
 class Shipment(models.Model):
     STATUS = (
@@ -92,9 +80,15 @@ class Shipment(models.Model):
     estimated_date = models.DateField(default=datetime.now, blank=True)
     shipped_date = models.DateField(default=datetime.now, blank=True)
 
+    def __str__(self):
+        return self.get_status_display() + " " + self.order.lineitem
+
 class Timestamps(models.Model):
     shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(default=datetime.now, blank=True)
-    description = models.CharField(max_length=20)
+    description = models.CharField(max_length=50)
     City = models.CharField(max_length=10)
     State = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.shipment.order.lineitem + " " + self.description
