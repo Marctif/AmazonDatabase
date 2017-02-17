@@ -85,10 +85,11 @@ class Shipment(models.Model):
 
 class Timestamps(models.Model):
     shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(default=datetime.now, blank=True)
+    timestamp = models.DateTimeField(blank=True, default=datetime.now )
     description = models.CharField(max_length=50)
     City = models.CharField(max_length=10)
     State = models.CharField(max_length=10)
 
     def __str__(self):
         return self.shipment.order.lineitem + " " + self.description
+
