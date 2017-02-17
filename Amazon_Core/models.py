@@ -61,7 +61,7 @@ class CreditCard(models.Model):
         return str(self.CreditCardNumber)
 
 class Order(models.Model):
-    lineitem = models.CharField(max_length=50,default = None)
+
     custProfile = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)
     payMethod = models.ForeignKey(CreditCard, on_delete=models.CASCADE)
     amount = models.PositiveIntegerField(default=0)
@@ -93,3 +93,19 @@ class Timestamps(models.Model):
     def __str__(self):
         return self.shipment.order.lineitem + " " + self.description
 
+class Item(models.Model):
+    SKU = models.IntegerField(unique=True)
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=300)
+    price = models.IntegerField()
+    numAvailable = models.IntegerField()
+
+    def __str__(self):
+        return self.name
+
+class LineItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+
+class LineItemTable(models.Model):
+    item = models.ForeignKey(Item)
+    lineItem = models.ForeignKey(LineItem)
