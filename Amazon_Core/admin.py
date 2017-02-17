@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomerProfile, BillingAddress, ShippingAddress, CreditCard, Order, Timestamps,Shipment
+from .models import CustomerProfile, BillingAddress, ShippingAddress, CreditCard, Order, Timestamps,Shipment, Item
 
 
 
@@ -25,4 +25,5 @@ admin.site.register(ShippingAddress)
 admin.site.register(Order)
 admin.site.register(Shipment)
 admin.site.register(Timestamps)
+admin.site.register(Item)
 

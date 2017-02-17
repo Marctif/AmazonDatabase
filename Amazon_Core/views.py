@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from .forms import RegisterForm, UserLoginForm, CustomerProfileForm, ShippingAddressForm, CreditCardForm, BillingAddressForm
-from .models import CustomerProfile, ShippingAddress, CreditCard, BillingAddress, MONTHS, YEARS
+from .models import CustomerProfile, ShippingAddress, CreditCard, BillingAddress, MONTHS, YEARS, Item
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_list_or_404, get_object_or_404
 import datetime
@@ -245,3 +245,7 @@ def update_profile_temp(request):
 def logout_view(request):
     logout(request)
     return render(request, 'Amazon_Core/logout.html')
+
+def catalog(request):
+    itemList = Item.objects.all()
+    return render(request, 'Amazon_Core/catalog.html', {'itemList': itemList})
