@@ -97,7 +97,7 @@ DATABASES = {
         'NAME': 'amazontest',
         'ENGINE': 'mysql.connector.django',
         'USER': 'root',
-        'PASSWORD': 'm08tfrea',
+        'PASSWORD': 'Awkward$123',
         'HOST': '127.0.0.1',
         'PORT': '3306',
 
@@ -142,6 +142,10 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 SITE_ID = 1
 
