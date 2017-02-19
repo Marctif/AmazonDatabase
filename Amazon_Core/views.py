@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from .forms import RegisterForm, UserLoginForm, CustomerProfileForm, ShippingAddressForm, CreditCardForm, BillingAddressForm
+from .forms import CustomerProfileForm, ShippingAddressForm, CreditCardForm, BillingAddressForm
 from .models import CustomerProfile, ShippingAddress, CreditCard, BillingAddress, MONTHS, YEARS
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_list_or_404, get_object_or_404
+from django.contrib.auth.decorators import login_required
 import datetime
 
 # Create your views here.
@@ -12,61 +13,37 @@ import datetime
 def home(request):
     return render(request, 'Amazon_Core/home.html')
 
-def demo(request):
-    return render(request, 'Amazon_Core/demo.html')
+
+@login_required
+def userprofile(request):
+    user = request.user
+    context = {'user':user}
+    template = 'Amazon_Core/profile.html'
+    return render(request,template,context)
+
+@login_required
+def user_edit(request):
+
+    if request.method == 'POST':
+        profile_form = CustomerProfileForm(request.POST, instance=request.user.CustomerProfile)
+        shipping_form = ShippingAddressForm(request.POST, instancel=request.user.CustomerProfile.ShippingAddress)
+
+        if all([profile_form.is_valid(), shipping_form.is_valid()]):
+            profile = profile_form.save()
+            shipping = shipping_form.save()
+            return redirect(user)
+
+    else:
+        profile_form = CustomerProfileForm(instance=request.user.CustomerProfile)
+        shipping_form = ShippingAddressForm(instance=request.user.CustomerProfile.ShippingAddress)
+
+    return render(request, 'Amazon_Core/edit.html', {
+        'profile_form': profile_form,
+        'shipping_form': shipping_form,
+    })
 
 def update_profile(request):
     return render(request, 'Amazon_Core/update_profile.html')
-
-def login_view(request):
-    form = UserLoginForm(request.POST or None)
-    print(request.user)
-    print(request.user.is_authenticated)
-
-    if form.is_valid():
-        #print("Form is valid")
-        username = form.cleaned_data.get("username")
-        password = form.cleaned_data.get("password")
-        user = authenticate(username = username, password = password)
-        login(request, user)
-        return redirect ('home')
-
-    return render(request, 'Amazon_Core/login.html', {"form": form})
-
-
-def signup(request):
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = RegisterForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            first_name_Val= form.cleaned_data.get('first_name')
-            last_name_Val = form.cleaned_data.get('last_name')
-            email_Val = form.cleaned_data.get('email')
-            password_Val = form.cleaned_data.get('password')
-
-            try:
-                user = User.objects.create_user(
-                    first_name = first_name_Val,
-                    last_name = last_name_Val,
-                    email = email_Val,
-                    password = password_Val,
-                    username = email_Val
-                )
-                profile = CustomerProfile.objects.create(user=user)
-
-
-            except ValueError:
-                print(ValueError)
-            return HttpResponseRedirect('/')
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = RegisterForm()
-    return render(request, 'Amazon_Core/signup.html',  {'form': form })
 
 def update_profile_temp(request):
 
@@ -241,7 +218,3 @@ def update_profile_temp(request):
             form4 = BillingAddressForm()
 
     return render(request, 'Amazon_Core/update_profile.html',  {'form1': form1, 'form2' : form2, 'form3': form3, 'form4': form4  })
-
-def logout_view(request):
-    logout(request)
-    return render(request, 'Amazon_Core/logout.html')

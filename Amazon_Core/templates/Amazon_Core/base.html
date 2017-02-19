@@ -19,15 +19,14 @@
 
 <nav>
     <div class="nav-wrapper">
-      <a href="#" class="brand-logo">Logo</a>
+      <a href="{% url 'home' %}" class="brand-logo">LOGO</a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="{% url 'demo' %}">Demo</a></li>
-         {% if user.is_authenticated %}
-                <li><a href="{% url 'update_profile' %}">Update Profile</a></li>
-                <li><a href="{% url 'logout' %}">Log out</a></li>
+         {% if request.user.is_authenticated %}
+                <li><a href="{% url 'profile' %}">Profile</a></li>
+                <li><a href="{% url 'account_logout' %}">Log out</a></li>
             {% else %}
-                <li><a href="{% url 'signup' %}">Signup</a></li>
-                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'account_signup' %}">Signup</a></li>
+                <li><a href="{% url 'account_login' %}">Login</a></li>
             {% endif %}
       </ul>
     </div>

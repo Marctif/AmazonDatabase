@@ -3,7 +3,14 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'me@gmail.com'
+DEFAULT_FROM_EMAIL = 'me@gmail.com'
+SERVER_EMAIL = 'me@gmail.com'
+EMAIL_HOST_PASSWORD = 'password'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
@@ -138,7 +145,12 @@ STATICFILES_DIRS = (
 SITE_ID = 1
 
 LOGIN_URL = '/accounts/login/'
-LOGIN_RESET_URL ='/'
+LOGIN_REDIRECT_URL ='/'
+
+ACCOUNT_AUTHENTICATION_METHOD ="username_email"
+ACCOUNT_CONFIRM_EMAIL_ON_GET = False
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = LOGIN_URL
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = None
 
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
 ACCOUNT_EMAIL_REQUIRED = False
@@ -159,4 +171,4 @@ ACCOUNT_USERNAME_BLACKLIST = []
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_PASSWORD_INPUT_RENDER_VALUE = False
 ACCOUNT_PASSWORD_MIN_LENGTH = 6
-ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True

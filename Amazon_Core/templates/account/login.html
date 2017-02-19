@@ -1,0 +1,44 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load account socialaccount %}
+
+
+{% block content %}
+
+{% load material_form %}
+
+
+       <div class="row">
+      <div class="col m4 offset-m4">
+       <div class="card-panel">
+       <div class="card-content">
+       <h5 style="text-align: center" > SIGN IN </h5>
+
+           <p>{% blocktrans %}If you have not created an account yet, then please
+               <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+
+
+           <form class="login" method="POST" action="{% url 'account_login' %}">
+               {% csrf_token %}
+                <p><label for="id_login">Username:</label> <input autofocus="autofocus" id="id_login" maxlength="150" name="login" placeholder="Username" type="text" required=""></p>
+               <p><label for="id_password">Password:</label> <input id="id_password" name="password" placeholder="Password" type="password" required=""></p>
+               <p> <input id="id_remember" name="remember" type="checkbox"><label for="id_remember">Remember Me</label></p>
+               {% if redirect_field_value %}
+                   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+               {% endif %}
+               <a class="btn waves-effect waves-teal" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+               <button class="btn waves-effect waves-teal" type="submit">{% trans "Sign In" %}</button>
+</form>
+      </div>
+   </div>
+    </div>
+    </div>
+
+{% endblock %}
+
+
+
+
+
+
