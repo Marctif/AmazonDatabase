@@ -16,8 +16,11 @@ def home(request):
 
 @login_required
 def userprofile(request):
-    user = request.user
-    context = {'user':user}
+    profile = CustomerProfile.objects.get(user=request.user)
+    shipping = profile.shippingaddress_set.all()
+    billing = profile.billingaddress_set.all()
+    credit = profile.creditcard_set.all()
+    context = {'profile':profile, 'shipping': shipping, 'billing': billing, 'credit': credit,}
     template = 'Amazon_Core/profile.html'
     return render(request,template,context)
 
