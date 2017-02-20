@@ -20,7 +20,7 @@ def userprofile(request):
     shipping = profile.shippingaddress_set.all()
     billing = profile.billingaddress_set.all()
     credit = profile.creditcard_set.all()
-    context = {'profile':profile, 'shipping': shipping, 'billing': billing, 'credit': credit,}
+    context = {'profile':profile, 'shipping': shipping, 'billing': billing, 'credit': credit}
     template = 'Amazon_Core/profile.html'
     return render(request,template,context)
 
