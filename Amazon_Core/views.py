@@ -277,8 +277,7 @@ def ItemDetail(request,item_id):
 
                 item.price = price
                 item.numAvailable = numAvailable
-                print(price)
-                item.save(update_fields=["price","numAvailable"])
+                item.save()
                 messages.success(request, 'Info updated successfully.')
 
         # if a GET (or any other method) we'll create a blank form
