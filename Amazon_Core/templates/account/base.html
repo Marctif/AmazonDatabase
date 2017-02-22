@@ -1,0 +1,43 @@
+{% load staticfiles %}
+{% load static %}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    {% include 'material/includes/material_css.html' %}
+    <script src="{% static 'material/js/jquery-2.2.0.js' %}"></script>
+    {% include 'material/includes/material_js.html' %}
+    <style>
+
+    </style>
+
+</head>
+<body>
+
+
+<nav>
+    <div class="nav-wrapper">
+      <a href="{% url 'home' %}" class="brand-logo">LOGO</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+         {% if request.user.is_authenticated %}
+                <li><a href="{% url 'profile' %}">Profile</a></li>
+                <li><a href="{% url 'account_logout' %}">Log out</a></li>
+            {% else %}
+                <li><a href="{% url 'account_signup' %}">Signup</a></li>
+                <li><a href="{% url 'account_login' %}">Login</a></li>
+            {% endif %}
+      </ul>
+    </div>
+  </nav>
+
+
+<!-- End of Navbar -->
+
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>
