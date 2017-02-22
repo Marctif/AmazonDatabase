@@ -116,3 +116,15 @@ class CreditCardForm(forms.Form):
         securityCode = cleaned_data.get('securityCode')
         month = cleaned_data.get('month')
         year = cleaned_data.get('year')
+
+class ItemForm(forms.Form):
+    price = forms.IntegerField(label="Price")
+    numAvailable = forms.IntegerField(label="Total number available")
+
+    def clean(self):
+        cleaned_data = super(ItemForm, self).clean()
+
+        # get form values
+        price = cleaned_data.get('price')
+        numAvailable = cleaned_data.get('numAvailable')
+

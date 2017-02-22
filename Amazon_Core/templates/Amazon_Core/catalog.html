@@ -11,6 +11,7 @@
         {% for item in itemList %}
                 <div class="card">
                 <p>{{ item.name }}</p>
+                <a href="{% url 'detail' item.id %}"> detail page</a>
                 </div>
         {% endfor %}
     {% endif %}

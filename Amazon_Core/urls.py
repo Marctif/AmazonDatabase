@@ -8,7 +8,8 @@ urlpatterns = [
     url(r'^login/', views.login_view, name='login'),
     url(r'^logout/', views.logout_view, name='logout'),
     url(r'^catalog/', views.catalog, name='catalog'),
+    url(r'^formsetTest/', views.formsetTest, name='formsetTest'),
     url(r'^update_profile/', views.update_profile_temp, name='update_profile'),
+    url(r'^(?P<item_id>[0-9]+)', views.ItemDetail, name='detail'),
     url(r'^$', views.home, name='home'),
-
 ]

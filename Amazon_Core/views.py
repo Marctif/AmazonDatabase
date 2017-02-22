@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from .forms import RegisterForm, UserLoginForm, CustomerProfileForm, ShippingAddressForm, CreditCardForm, BillingAddressForm
+from django.contrib import messages
+from .forms import RegisterForm, UserLoginForm, CustomerProfileForm, ShippingAddressForm, CreditCardForm, BillingAddressForm, ItemForm
 from .models import CustomerProfile, ShippingAddress, CreditCard, BillingAddress, MONTHS, YEARS, Item
 from django.http import HttpResponseRedirect
+from django.forms.formsets import formset_factory
 from django.shortcuts import get_list_or_404, get_object_or_404
+from django.http import Http404
 import datetime
 
 # Create your views here.
@@ -249,3 +252,42 @@ def logout_view(request):
 def catalog(request):
     itemList = Item.objects.all()
     return render(request, 'Amazon_Core/catalog.html', {'itemList': itemList})
+
+def formsetTest(request):
+    ShippingFormSet = formset_factory(ShippingAddressForm, extra= 2)
+    if(request.method == 'POST'):
+        x = 2
+    else:
+        ship_formSet = ShippingFormSet()
+    return render(request, 'Amazon_Core/formsetTest.html', {'ship_formSet':ship_formSet})
+
+def ItemDetail(request,item_id):
+    try:
+        item = Item.objects.get(pk=item_id)
+        if request.method == 'POST':
+            # create a form instance and populate it with data from the request:
+            form = ItemForm(request.POST)
+            # check whether it's valid:
+            if form.is_valid():
+                # process the data in form.cleaned_data as required
+                # ...
+                # redirect to a new URL:
+                price = form.cleaned_data.get('price')
+                numAvailable = form.cleaned_data.get('numAvailable')
+
+                item.price = price
+                item.numAvailable = numAvailable
+                print(price)
+                item.save(update_fields=["price","numAvailable"])
+                messages.success(request, 'Info updated successfully.')
+
+        # if a GET (or any other method) we'll create a blank form
+        else:
+            price = item.price
+            numAvailable = item.numAvailable
+            form = ItemForm(initial={'price':price, 'numAvailable':numAvailable})
+
+
+    except Item.DoesNotExist:
+        raise Http404("Item does not exist")
+    return render(request, 'Amazon_Core/detail.html', {'item':item, 'form':form})

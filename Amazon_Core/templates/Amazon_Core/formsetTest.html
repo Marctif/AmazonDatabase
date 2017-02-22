@@ -1,0 +1,23 @@
+{% extends 'Amazon_Core/base.html' %}
+{% load static %}
+
+{% block content %}
+
+     {% load material_form %}
+
+    <div class="col-md-12">
+    <h1 style="text-align: center" > Formset Test</h1>
+    </div>
+    <div>
+        <form method="post">
+            {% for shipForm in ship_formSet %}
+                {% form form=shipForm %}
+                {% endform %}
+            {% endfor %}
+
+        </form>
+
+    </div>
+
+
+{% endblock %}
