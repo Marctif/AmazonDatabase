@@ -262,6 +262,8 @@ def formsetTest(request):
     return render(request, 'Amazon_Core/formsetTest.html', {'ship_formSet':ship_formSet})
 
 def ItemDetail(request,item_id):
+    if(not request.user.is_superuser):
+        return HttpResponseRedirect('/catalog/')
     try:
         item = Item.objects.get(pk=item_id)
         if request.method == 'POST':

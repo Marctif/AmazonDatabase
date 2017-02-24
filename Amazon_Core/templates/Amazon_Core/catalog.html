@@ -35,8 +35,9 @@
 
                 <div class="card-action">
                      <a href="{% url 'detail' item.id %}">Add To Cart</a>
-
-                     <a href="{% url 'detail' item.id %}">Edit Price/Quantiy</a>
+                     {% if user.is_superuser %}
+                        <a href="{% url 'detail' item.id %}">Edit Price/Quantiy</a>
+                     {% endif %}
                 </div>
 
                 <div class="card-reveal">

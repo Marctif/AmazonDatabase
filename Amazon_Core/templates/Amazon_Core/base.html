@@ -21,8 +21,9 @@
     <div class="nav-wrapper">
       <a href="#" class="brand-logo">Logo</a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="{% url 'demo' %}">Demo</a></li>
+        <li><a href="{% url 'catalog' %}">Catalog</a></li>
          {% if user.is_authenticated %}
+                <li>Welcome {{ user.username }}</li>
                 <li><a href="{% url 'update_profile' %}">Update Profile</a></li>
                 <li><a href="{% url 'logout' %}">Log out</a></li>
             {% else %}
