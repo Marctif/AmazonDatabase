@@ -1,0 +1,72 @@
+{% extends 'account/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load material_form %}
+
+
+{% block content %}
+
+    <a href="#" style="float: right;"><button class="btn waves-effect waves-teal">Update/Edit</button></a>
+
+   <div class="row">
+      <div class="col m8  offset-m2">
+
+          <div class="card">
+           <div class="card-image waves-effect waves-block waves-light">
+               <img src="{% static 'img/cover.jpg'%}">
+               <span class="card-title">Hello,{{ user.username }}</span>
+           </div>
+           <div class="card-tabs ">
+               <ul class="tabs tabs-fixed-width light-green lighten-5">
+                   <li class="tab"><a href="#profile">PERSONAL INFO</a></li>
+                   <li class="tab"><a class="active" href="#shipping">SHIPPING ADDRESS</a></li>
+                   <li class="tab"><a href="#billing">BILLING ADDRESS</a></li>
+                   <li class="tab"><a href="#credit">CREDIT CARDS</a></li>
+               </ul>
+           </div>
+           <div class="card-content lime lighten-5">
+               <div id="profile">
+                   </br><b><i> First Name : </i></b> {{ profile.first_name }}</br>
+                   </br><b><i> Last Name : </i></b> {{ profile.last_name }}</br>
+                   </br><b><i> Birthday : </i></b> {{ profile.birthday }}</br>
+                   </br><b><i> Username : </i></b> {{ user.username }}</br>
+                   </br><b><i> E-mail : </i></b> {{ user.email }}</br>
+               </div>
+
+               <div id="shipping">
+                   {%for shipping in shipping%}
+                       <h5 style="color:forestgreen;"><i> Shipping Address #{{ shipping.id }}</i></h5>
+                       </br><b><i> Street : </i></b> {{ shipping.Street }}</br>
+                       </br><b><i> City : </i></b> {{ shipping.City }}</br>
+                       </br><b><i> State : </i></b> {{ shipping.State }}</br>
+                       </br><b><i> Zipcode : </i></b> {{ shipping.Zipcode }}</br></br><hr>
+                   {% endfor %}
+               </div>
+
+               <div id="billing">
+                   {%for billing in billing%}
+                       <h5 style="color:forestgreen;"><i> Billing Address #{{ billing.id }}</i></h5>
+                       </br><b><i> Street : </i></b> {{ billing.Street }}</br>
+                       </br><b><i> City : </i></b> {{ billing.City }}</br>
+                       </br><b><i> State : </i></b> {{ billing.State }}</br>
+                       </br><b><i> Zipcode : </i></b> {{ billing.Zipcode }}</br></br><hr>
+                   {% endfor %}
+               </div>
+
+               <div id="credit">
+                   {%for credit in credit%}
+                       </br><b><i> Credit Card Number : </i></b> {{ credit.CreditCardNumber }}</br></br><hr>
+                   {% endfor %}
+               </div>
+           </div>
+           </div>
+      </div>
+   </div>
+
+
+    <!-- Simple Textfield -->
+
+
+
+
+{% endblock %}
