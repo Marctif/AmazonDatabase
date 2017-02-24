@@ -2,22 +2,46 @@
 {% load static %}
 
 {% block content %}
+{% load material_form %}
 
-     {% load material_form %}
+
+
 
     <div class="col-md-12">
     <h1 style="text-align: center" > Formset Test</h1>
     </div>
-    <div>
+    <div class="row">
+    <div class="col s4"> </div>
+    <div class="col s4" id="form_set">
+
         <form method="post">
+        {{ ship_formSet.management_form }}
+        {% csrf_token %}
+         <button style="align: center" type="submit" name="_submit" class="btn">Submit</button>
             {% for shipForm in ship_formSet %}
                 {% form form=shipForm %}
                 {% endform %}
             {% endfor %}
 
+        <div id="empty_form" style="display:none">
+            {{ ship_formSet.empty_form }}
+        </div>
+
         </form>
 
     </div>
+    <div class="col s4"></div>
+    </div>
+<input type="button" value="Add More" id="add_more">
+
+
+<script>
+    $('#add_more').click(function() {
+        var form_idx = $('#id_form-TOTAL_FORMS').val();
+        $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+        $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+    });
+</script>
 
 
 {% endblock %}

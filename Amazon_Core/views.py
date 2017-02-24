@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
-from .forms import RegisterForm, UserLoginForm, CustomerProfileForm, ShippingAddressForm, CreditCardForm, BillingAddressForm, ItemForm
+from .forms import  CustomerProfileForm, ShippingAddressForm, CreditCardForm, BillingAddressForm, ItemForm
 from .models import CustomerProfile, ShippingAddress, CreditCard, BillingAddress, MONTHS, YEARS, Item
 from .forms import CustomerProfileForm, ShippingAddressForm, CreditCardForm, BillingAddressForm
 from .models import CustomerProfile, ShippingAddress, CreditCard, BillingAddress, MONTHS, YEARS
@@ -241,7 +241,12 @@ def catalog(request):
 def formsetTest(request):
     ShippingFormSet = formset_factory(ShippingAddressForm, extra= 2)
     if(request.method == 'POST'):
-        x = 2
+
+        ship_formSet = ShippingFormSet(request.POST)
+        if ship_formSet.is_valid():
+            for shipForm in ship_formSet:
+                street = shipForm.cleaned_data.get('street')
+                print(street)
     else:
         ship_formSet = ShippingFormSet()
     return render(request, 'Amazon_Core/formsetTest.html', {'ship_formSet':ship_formSet})
