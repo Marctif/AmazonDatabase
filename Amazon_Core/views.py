@@ -279,6 +279,7 @@ def ItemDetail(request,item_id):
                 item.numAvailable = numAvailable
                 item.save()
                 messages.success(request, 'Info updated successfully.')
+                return HttpResponseRedirect('/catalog/')
 
         # if a GET (or any other method) we'll create a blank form
         else:

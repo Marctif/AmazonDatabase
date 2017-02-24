@@ -99,6 +99,7 @@ class Item(models.Model):
     description = models.CharField(max_length=300)
     price = models.IntegerField()
     numAvailable = models.IntegerField()
+    picture = models.ImageField(upload_to='items', null=True, )
 
     def __str__(self):
         return self.name
