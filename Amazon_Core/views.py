@@ -11,6 +11,14 @@ from django.forms.formsets import formset_factory
 from django.shortcuts import get_list_or_404, get_object_or_404
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
+
+from django.shortcuts import render_to_response
+#from django.core.context_processors import csrf
+from django.template import RequestContext  # For CSRF
+from django.forms.formsets import formset_factory, BaseFormSet
+from django.http import HttpResponse, HttpResponseRedirect
+from .models import *
+from .forms import *
 import datetime
 
 # Create your views here.
@@ -283,3 +291,99 @@ def ItemDetail(request,item_id):
     except Item.DoesNotExist:
         raise Http404("Item does not exist")
     return render(request, 'Amazon_Core/detail.html', {'item':item, 'form':form})
+
+def dynamicShipping(request):
+    # This class is used to make empty formset forms required
+    # See http://stackoverflow.com/questions/2406537/django-formsets-make-first-required/4951032#4951032
+    class RequiredFormSet(BaseFormSet):
+        def __init__(self, *args, **kwargs):
+            super(RequiredFormSet, self).__init__(*args, **kwargs)
+            for form in self.forms:
+                form.empty_permitted = False
+    custProfile = get_object_or_404(CustomerProfile, user=request.user)
+    ShipFormSet = formset_factory(ShippingForm, max_num=10, formset=RequiredFormSet)
+    ShipSet = ShippingAddress.objects.filter(custProfile=custProfile)
+
+    if request.method == 'POST':  # If the form has been submitted...
+        # todo_list_form = TodoListForm(request.POST)  # A form bound to the POST data
+        # Create a formset from the submitted data
+        ship_formset = ShipFormSet(request.POST, request.FILES)
+
+        # drop all current Addresses
+        ShipSet.delete()
+        x = 1
+        if  ship_formset.is_valid():
+            for form in ship_formset.forms:
+                ship_item = form.save(commit=False)
+
+                #Re add all Addresses
+                ShippingAddress.objects.create(
+                    custProfile=custProfile,
+                    Street=ship_item.Street,
+                    City=ship_item.City,
+                    State=ship_item.State,
+                    Zipcode=ship_item.Zipcode,
+                    count=x
+                )
+                x = x + 1
+            messages.success(request, 'Addresses updated successfully.')
+            return HttpResponseRedirect('/profile/')  # Redirect to a 'success' page
+    else:
+            ship_formset = ShipFormSet(initial=[
+     {'Street': x.Street, 'City' : x.City, 'State' : x.State, 'Zipcode' : x.Zipcode
+      } for x in ShipSet])
+
+    c = {
+         'todo_item_formset': ship_formset,
+         }
+    #c.update(csrf(request))
+
+    return render(request, 'Amazon_Core/dynamicShipping.html', c)
+
+def dynamicBilling(request):
+    # This class is used to make empty formset forms required
+    # See http://stackoverflow.com/questions/2406537/django-formsets-make-first-required/4951032#4951032
+    class RequiredFormSet(BaseFormSet):
+        def __init__(self, *args, **kwargs):
+            super(RequiredFormSet, self).__init__(*args, **kwargs)
+            for form in self.forms:
+                form.empty_permitted = False
+    custProfile = get_object_or_404(CustomerProfile, user=request.user)
+    BillFormSet = formset_factory(BillingForm, max_num=10, formset=RequiredFormSet)
+    BillSet = BillingAddress.objects.filter(custProfile=custProfile)
+
+    if request.method == 'POST':  # If the form has been submitted...
+        # todo_list_form = TodoListForm(request.POST)  # A form bound to the POST data
+        # Create a formset from the submitted data
+        bill_formset = BillFormSet(request.POST, request.FILES)
+
+        # drop all current Addresses
+        BillSet.delete()
+        x = 1
+        if  bill_formset.is_valid():
+            for form in bill_formset.forms:
+                bill_item = form.save(commit=False)
+
+                #Re add all Addresses
+                BillingAddress.objects.create(
+                    custProfile=custProfile,
+                    Street=bill_item.Street,
+                    City=bill_item.City,
+                    State=bill_item.State,
+                    Zipcode=bill_item.Zipcode,
+                    count=x
+                )
+                x = x + 1
+            messages.success(request, 'Addresses updated successfully.')
+            return HttpResponseRedirect('/profile/')  # Redirect to a 'success' page
+    else:
+            bill_formset = BillFormSet(initial=[
+     {'Street': x.Street, 'City' : x.City, 'State' : x.State, 'Zipcode' : x.Zipcode
+      } for x in BillSet])
+
+    c = {
+         'todo_item_formset': bill_formset,
+         }
+    #c.update(csrf(request))
+
+    return render(request, 'Amazon_Core/dynamicBilling.html', c)

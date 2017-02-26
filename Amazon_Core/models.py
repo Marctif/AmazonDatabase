@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
+from .choices import *
 # Create your models here.
 
 class CustomerProfile(models.Model):
@@ -18,6 +19,7 @@ class ShippingAddress(models.Model):
     City = models.CharField(max_length=50, null=True)
     State = models.CharField(max_length=50, null=True)
     Zipcode = models.IntegerField(null=True)
+    count = models.IntegerField(null=True)
 
     def __str__(self):
         return self.Street + " " + self.City + " " + self.State + " " + str(self.Zipcode)
@@ -28,27 +30,12 @@ class BillingAddress(models.Model):
     City = models.CharField(max_length=50, null=True)
     State = models.CharField(max_length=50, null=True)
     Zipcode = models.IntegerField( null=True)
+    count = models.IntegerField(null=True)
 
     def __str__(self):
         return self.Street + " " + self.City + " " + self.State + " " + str(self.Zipcode)
 
-YEARS = (
-    ("2017", "2017"),
-    ("2018", "2018"),
-    ("2019", "2019"),
-    ("2020", "2020"),
-    ("2021", "2021"),
-    ("2022", "2022"),
-    ("2023", "2023"),
-)
-MONTHS = (
-    (1, 1),
-    (2, 2),
-    (3, 3),
-    (4, 4),
-    (5, 5),
 
-)
 
 class CreditCard(models.Model):
     custProfile = models.ForeignKey(CustomerProfile)
@@ -110,3 +97,19 @@ class LineItem(models.Model):
 class LineItemTable(models.Model):
     item = models.ForeignKey(Item)
     lineItem = models.ForeignKey(LineItem)
+
+
+# TEST FOR DYNAMOC ADDING TO FORMSET
+class TodoList(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __unicode__(self):
+        return self.name
+
+class TodoItem(models.Model):
+    name = models.CharField(max_length=150,
+               help_text="e.g. Buy milk, wash dog etc")
+    list = models.ForeignKey(TodoList)
+
+    def __unicode__(self):
+        return self.name + " (" + str(self.list) + ")"

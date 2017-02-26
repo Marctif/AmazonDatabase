@@ -5,6 +5,9 @@ from django.contrib.auth import (
     login,
     logout
 )
+from django.forms import ModelForm
+from .models import *
+from .choices import *
 
 
 class CustomerProfileForm(forms.Form):
@@ -52,23 +55,6 @@ class BillingAddressForm(forms.Form):
         stateB = cleaned_data.get('stateB')
         zipcodeB = cleaned_data.get('zipcodeB')
 
-YEARS = (
-    (2017, "2017"),
-    (2018, "2018"),
-    (2019, "2019"),
-    (2020, "2020"),
-    (2021, "2021"),
-    (2022, "2022"),
-    (2023, "2023"),
-)
-MONTHS = (
-    (1, "1"),
-    (2, "2"),
-    (3, "3"),
-    (4, "4"),
-    (5, "5"),
-
-)
 
 class CreditCardForm(forms.Form):
     number = forms.IntegerField(label="Credit card Number")
@@ -96,3 +82,26 @@ class ItemForm(forms.Form):
         price = cleaned_data.get('price')
         numAvailable = cleaned_data.get('numAvailable')
 
+class TodoListForm(ModelForm):
+  class Meta:
+    model = TodoList
+    fields = '__all__'
+
+
+class TodoItemForm(ModelForm):
+  class Meta:
+    model = TodoItem
+    exclude = ('list',)
+    fields = '__all__'
+
+class ShippingForm(ModelForm):
+    class Meta:
+        model = ShippingAddress
+        fields = '__all__'
+        exclude = ('custProfile', 'count',)
+
+class BillingForm(ModelForm):
+    class Meta:
+        model = BillingAddress
+        fields = '__all__'
+        exclude = ('custProfile', 'count',)
