@@ -98,3 +98,6 @@ class Timestamps(models.Model):
     description = models.CharField(max_length=20)
     City = models.CharField(max_length=10)
     State = models.CharField(max_length=10)
+
+
+

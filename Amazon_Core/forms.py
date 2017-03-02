@@ -7,6 +7,7 @@ from django.contrib.auth import (
 )
 
 
+
 class RegisterForm(forms.Form):
     first_name = forms.CharField(label="first_name", required=True)
     last_name = forms.CharField(label="last_name", required=True)
