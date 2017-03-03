@@ -24,15 +24,39 @@
     {% endfor %}
 {% endif %}
 
+<script>
+  $(document).ready(function(){
+
+      // Sidebar
+      $(".button-collapse").sideNav({menuWidth: 320, activationWidth: 70, edge: 'left'});
+      // Dropdown
+      $('.dropdown-button').dropdown({
+           inDuration: 300,
+           outDuration: 225,
+           constrain_width: false, // Does not change width of dropdown to that of the activator
+           hover: false, // Activate on hover
+           gutter: 0, // Spacing from edge
+           belowOrigin: true // Displays dropdown below the button
+           }
+      );
+    });
+</script>
+<ul id="dropdown1"  class="dropdown-content">
+  <li><a href="{% url 'profile' %}">Edit Profile</a></li>
+  <li class="divider"></li>
+  <li><a href="#">View Orders</a></li>
+</ul>
 
 <nav>
     <div class="nav-wrapper">
       <a href="{% url 'home' %}" class="brand-logo">LOGO</a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li> <a href="#">Cart (0)</a></li>
         <li><a href="{% url 'catalog' %}">Catalog</a></li>
          {% if request.user.is_authenticated %}
-                <li>Welcome {{ user.username }}</li>
-                <li><a href="{% url 'profile' %}">Profile</a></li>
+                <!-- <li>Welcome {{ user.username }}</li> -->
+                <li><a class="dropdown-button" href="#!" data-activates="dropdown1">Profile<i class="material-icons right">arrow_drop_down</i></a></li>
+
                 <li><a href="{% url 'account_logout' %}">Log out</a></li>
             {% else %}
                 <li><a href="{% url 'account_signup' %}">Signup</a></li>
