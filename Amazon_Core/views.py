@@ -19,6 +19,7 @@ from django.forms.formsets import formset_factory, BaseFormSet
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import *
 from .forms import *
+from django.views.decorators.csrf import csrf_exempt
 import datetime
 
 # Create your views here.
@@ -387,3 +388,44 @@ def dynamicBilling(request):
     #c.update(csrf(request))
 
     return render(request, 'Amazon_Core/dynamicBilling.html', c)
+
+def cart(request):
+    items = Item.objects.all()
+    return render(request, 'Amazon_Core/cart.html',{'items':items})
+
+
+@csrf_exempt
+def checkout(request):
+    if(request.method == 'POST'):
+        items = Item.objects.all()
+
+        itemSet = []
+        quantitySet = []
+
+        for x in range(1, items.__sizeof__()):
+            name = "item_" + "name" + "_" + str(x)
+            quantity = "item_" + "quantity" + "_" + str(x)
+            valName = request.POST.get(name)
+            valQuantity = request.POST.get(quantity)
+            if(valName != None):
+                #print(valName)
+                totalQuantity = 0
+                if (valQuantity != None):
+                    totalQuantity = int(valQuantity)
+                item = get_object_or_404(Item, name=valName)
+                item.numAvailable = totalQuantity
+                itemSet.append(item)
+                quantitySet.append(totalQuantity)
+                #print(item.SKU)
+
+        for item in itemSet:
+            print(item.name)
+        for q in quantitySet:
+            print(q)
+
+        #print(request.POST.get("item_name_1"))
+
+    else:
+        x = 3
+
+    return render(request, 'Amazon_Core/checkout.html')
