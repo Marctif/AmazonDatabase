@@ -93,7 +93,7 @@ DATABASES = {
         'NAME': 'amazontest',
         'ENGINE': 'mysql.connector.django',
         'USER': 'root',
-        'PASSWORD': 'm08tfrea',
+        'PASSWORD': 'Awkward$123',
         'HOST': '127.0.0.1',
         'PORT': '3306',
 
