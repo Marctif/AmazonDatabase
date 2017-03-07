@@ -12,6 +12,13 @@
     {% if itemList %}
         {% for item in itemList %}
             <div class="col s3">
+                <div class="simpleCart_shelfItem">
+
+
+                <span style="visibility:hidden" class="item_name">{{ item.name }}</span>
+                <span style="visibility:hidden" class="item_price">{{ item.price }}</span>
+                <span style="visibility:hidden" class="item_sku"> {{ item.SKU }}</span>
+
                 <div class="card">
                     <div class="card-image waves-effect waves-block waves-light">
                         <img class="activator" style="width:350px;height:350px;" src="{{ item.picture.url }}">
@@ -20,11 +27,12 @@
                 <div class="card-content grey lighten-4">
                      <span class="card-title activator grey-text text-darken-4">{{ item.name }}<i class="material-icons right">more_vert</i></span>
                     <p>Price: ${{ item.price }}</p>
+
                     <p>Quantity: {{ item.numAvailable }}</p>
                 </div>
 
                 <div class="card-action">
-                     <a href="{% url 'detail' item.id %}">Add To Cart</a>
+                     <a class="item_add" href="javascript:;"> Add to Cart </a></p>
                      {% if user.is_superuser %}
                         <a href="{% url 'detail' item.id %}">Edit Price/Quantiy</a>
                      {% endif %}
@@ -34,7 +42,7 @@
                     <span class="card-title grey-text text-darken-4">{{ item.name }}<i class="material-icons right">close</i></span>
                     <p>{{ item.description }}</p>
                 </div>
-
+                </div>
 
                 </div>
             </div>
