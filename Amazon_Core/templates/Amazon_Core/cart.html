@@ -1,0 +1,22 @@
+{% extends 'Amazon_Core/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="col-md-12">
+    <h1 style="text-align: center" >CART</h1>
+</div>
+    <div class="container">
+    <div class="simpleCart_items"></div>
+    <div>
+        <p>Total: <div class="simpleCart_total"></div> </p>
+
+        <a href="javascript:;" class="simpleCart_checkout"> {% csrf_token %}Checkout</a>
+    </div>
+<a id="myLink" href = test.html></a>
+    </div>
+    </div>
+
+
+
+{% endblock %}
