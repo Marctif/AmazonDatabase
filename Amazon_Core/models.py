@@ -61,22 +61,53 @@ class CreditCard(models.Model):
         return str(self.CreditCardNumber)
 
 class Order(models.Model):
-
+    STATUS = (
+        ('PE', 'PENDING'),
+        ('SH', 'SHIPPED'),
+        ('IN', 'INVOICED'),
+        ('RE', 'RETURNED'),
+    )
     custProfile = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)
+    status = models.CharField(max_length=10, choices=STATUS, default='PE',)
     payMethod = models.ForeignKey(CreditCard, on_delete=models.CASCADE)
-    amount = models.PositiveIntegerField(default=0)
+    total_cost = models.PositiveIntegerField(default=0)
+    tax = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        return self.lineitem
+        return self.get_status_display() + " "
+
+class Cart(models.Model):
+    custProfile = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)
+    total_price = models.PositiveIntegerField(default=0)
+
+class Item(models.Model):
+    SKU = models.IntegerField(unique=True)
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=300)
+    price = models.IntegerField()
+    numAvailable = models.IntegerField()
+
+    def __str__(self):
+        return self.name
+
+class LineItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    cost = models.IntegerField()
+
+    def __str__(self):
+        return self.item.name
+
 
 class Shipment(models.Model):
     STATUS = (
-        ('OR', 'Ordered'),
-        ('SP', 'Shipped'),
-        ('DE', 'Delivered'),
+        ('PI', 'Pick'),
+        ('PA', 'Pack'),
+        ('SH', 'Ship'),
     )
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    status = models.CharField(max_length=5, choices=STATUS, default='OR',)
+    litem = models.ForeignKey(LineItem, on_delete=models.CASCADE)
+    status = models.CharField(max_length=5, choices=STATUS, default='PI',)
     estimated_date = models.DateField(default=datetime.now, blank=True)
     shipped_date = models.DateField(default=datetime.now, blank=True)
 
@@ -92,20 +123,3 @@ class Timestamps(models.Model):
 
     def __str__(self):
         return self.shipment.order.lineitem + " " + self.description
-
-class Item(models.Model):
-    SKU = models.IntegerField(unique=True)
-    name = models.CharField(max_length=50)
-    description = models.CharField(max_length=300)
-    price = models.IntegerField()
-    numAvailable = models.IntegerField()
-
-    def __str__(self):
-        return self.name
-
-class LineItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
-
-class LineItemTable(models.Model):
-    item = models.ForeignKey(Item)
-    lineItem = models.ForeignKey(LineItem)
