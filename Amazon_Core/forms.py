@@ -105,3 +105,18 @@ class BillingForm(ModelForm):
         model = BillingAddress
         fields = '__all__'
         exclude = ('custProfile', 'count',)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
