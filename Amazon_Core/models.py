@@ -56,10 +56,11 @@ class Order(models.Model):
         )
 
     custProfile = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)
+    billAddress = models.ForeignKey(BillingAddress,on_delete=models.CASCADE, null=True)
+    shipAddress = models.ForeignKey(ShippingAddress,on_delete=models.CASCADE,null=True)
     status = models.CharField(max_length=10, choices=STATUS, default='PE', )
-    payMethod = models.ForeignKey(CreditCard, on_delete=models.CASCADE)
+    payMethod = models.ForeignKey(CreditCard, on_delete=models.CASCADE, null=True)
     total_cost = models.PositiveIntegerField(default=0)
-    tax = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.get_status_display() + " "
@@ -79,9 +80,10 @@ class LineItem(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True)
     quantity = models.PositiveIntegerField(default=1)
     cost = models.IntegerField(null=True)
+    subTotal = models.IntegerField(null=True)
 
     def __str__(self):
-        return self.item.name
+        return self.item.name + " - " + str(self.quantity) + " @ " + str(self.cost) + " per"
 
 class LineItemTable(models.Model):
     item = models.ForeignKey(Item)
@@ -100,7 +102,7 @@ class Shipment(models.Model):
     shipped_date = models.DateField(default=datetime.now, blank=True)
 
     def __str__(self):
-        return self.get_status_display() + " " + self.order.lineitem
+        return self.get_status_display() + " "
 
 
 # TEST FOR DYNAMOC ADDING TO FORMSET

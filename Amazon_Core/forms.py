@@ -105,3 +105,15 @@ class BillingForm(ModelForm):
         model = BillingAddress
         fields = '__all__'
         exclude = ('custProfile', 'count',)
+
+class OrderForm(ModelForm):
+    class Meta:
+        model = Order
+        fields = '__all__'
+        exclude = ('custProfile','status','total_cost')
+
+    def __init__(self, custProfile, *args, **kwargs):
+        super(OrderForm, self).__init__(*args, **kwargs)
+        self.fields['billAddress'].queryset = BillingAddress.objects.filter(custProfile=custProfile)
+        self.fields['payMethod'].queryset = CreditCard.objects.filter(custProfile=custProfile)
+

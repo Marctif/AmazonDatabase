@@ -397,35 +397,115 @@ def cart(request):
 @csrf_exempt
 def checkout(request):
     if(request.method == 'POST'):
-        items = Item.objects.all()
 
-        itemSet = []
-        quantitySet = []
+        custProfile = get_object_or_404(CustomerProfile, user=request.user)
 
-        for x in range(1, items.__sizeof__()):
-            name = "item_" + "name" + "_" + str(x)
-            quantity = "item_" + "quantity" + "_" + str(x)
-            valName = request.POST.get(name)
-            valQuantity = request.POST.get(quantity)
-            if(valName != None):
-                #print(valName)
-                totalQuantity = 0
-                if (valQuantity != None):
-                    totalQuantity = int(valQuantity)
-                item = get_object_or_404(Item, name=valName)
-                item.numAvailable = totalQuantity
-                itemSet.append(item)
-                quantitySet.append(totalQuantity)
-                #print(item.SKU)
+        form = OrderForm(custProfile,request.POST)
+        if(form.is_valid()):
+            latestOrder = Order.objects.latest('id')
 
-        for item in itemSet:
-            print(item.name)
-        for q in quantitySet:
-            print(q)
+            billAdr = form.cleaned_data['billAddress']
+            shipAdr = form.cleaned_data['shipAddress']
+            creditCard = form.cleaned_data['payMethod']
+
+            latestOrder.billAddress = billAdr
+            latestOrder.shipAddress = shipAdr
+            latestOrder.payMethod = creditCard
+
+
+
+            latestOrder.save()
+
+            messages.success(request, 'Order created successfully.')
+
+            return HttpResponseRedirect('/')
+
+        else:
+            items = Item.objects.all()
+
+            itemSet = []
+            quantitySet = []
+            count = 0
+
+            for x in range(1, items.__sizeof__()):
+                name = "item_" + "name" + "_" + str(x)
+                quantity = "item_" + "quantity" + "_" + str(x)
+                valName = request.POST.get(name)
+                valQuantity = request.POST.get(quantity)
+                if(valName != None):
+                    #print(valName)
+                    totalQuantity = 0
+                    if (valQuantity != None):
+                        totalQuantity = int(valQuantity)
+                    item = get_object_or_404(Item, name=valName)
+                    item.numAvailable = totalQuantity
+                    itemSet.append(item)
+                    quantitySet.append(totalQuantity)
+                    #print(item.SKU)
+
+            for item in itemSet:
+                count = count + 1
+            #for q in quantitySet:
+            #    print(q)
+
+            lineItemSet = []
+
+            for x in range(0, count):
+                print(itemSet[x].name + " " + str(quantitySet[x]))
+                item = itemSet[x]
+                quantity = quantitySet[x]
+
+                modelItem = get_object_or_404(Item,name=item.name)
+                if(quantity > modelItem.numAvailable):
+                    messages.error(request, 'You selected too many of item: ' + item.name)
+                    return HttpResponseRedirect('/cart/')
+
+                else:
+                    modelItem.numAvailable = modelItem.numAvailable - quantity
+                    modelItem.save()
+
+
+                subtotal = item.price * quantity
+                lItem = LineItem.objects.create(
+                    item=item,
+                    quantity=quantity,
+                    cost=item.price,
+                    subTotal=subtotal
+                )
+                lineItemSet.append(lItem)
+
+
+            card = get_object_or_404(CreditCard, custProfile=custProfile)
+
+            order = Order.objects.create(
+                custProfile=custProfile,
+                status='PI',
+                payMethod=card,
+                total_cost=0,
+            )
+
+            total = 0
+
+            for i in lineItemSet:
+                ship = Shipment.objects.create(
+                    order=order,
+                    litem=i,
+                    status='PI',
+
+                )
+                total = total + i.quantity * i.cost
+
+            order.total_cost = total
+
+            order.save()
+
+
 
         #print(request.POST.get("item_name_1"))
 
     else:
+        custProfile = get_object_or_404(CustomerProfile, user=request.user)
+        form = OrderForm(custProfile=custProfile)
         x = 3
 
-    return render(request, 'Amazon_Core/checkout.html')
+    return render(request, 'Amazon_Core/checkout.html', {'form': form})

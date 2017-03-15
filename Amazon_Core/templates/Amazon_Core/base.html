@@ -19,7 +19,12 @@
 {% if messages %}
     {% for msg in messages %}
         <script type="text/javascript">
-            Materialize.toast('{{ msg.message }}', 4000,'green')
+            {% if msg.tags == 'success' %}
+                Materialize.toast('{{ msg.message }}', 4000,'green')
+            {% endif %}
+            {% if msg.tags == 'error' %}
+                Materialize.toast('{{ msg.message }}', 4000,'red')
+            {% endif %}
         </script>
     {% endfor %}
 {% endif %}
