@@ -13,7 +13,7 @@
     <form action="/checkout/" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button style="align: center" onclick="simpleCart.empty()" type="submit" name="_submit" class="btn">Submit
+    <button style="align: center" onclick="simpleCart.empty(); simpleCart.checkout()" type="submit" name="_submit" class="btn">Submit
 
     </button>
 </form>

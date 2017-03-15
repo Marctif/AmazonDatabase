@@ -63,7 +63,7 @@ class Order(models.Model):
     total_cost = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        return self.get_status_display() + " "
+        return self.custProfile.first_name + " " + self.custProfile.last_name + " - $" + str(self.total_cost) + " ("+ self.get_status_display() + ") "
 
 class Item(models.Model):
     SKU = models.IntegerField(unique=True)
@@ -83,7 +83,7 @@ class LineItem(models.Model):
     subTotal = models.IntegerField(null=True)
 
     def __str__(self):
-        return self.item.name + " - " + str(self.quantity) + " @ " + str(self.cost) + " per"
+        return self.item.name + " - " + str(self.quantity) + " @ $" + str(self.cost) + " per"
 
 class LineItemTable(models.Model):
     item = models.ForeignKey(Item)
@@ -102,7 +102,7 @@ class Shipment(models.Model):
     shipped_date = models.DateField(default=datetime.now, blank=True)
 
     def __str__(self):
-        return self.get_status_display() + " "
+        return str(self.order.id) + " - " + str(self.litem) + " - " + self.get_status_display()
 
 
 # TEST FOR DYNAMOC ADDING TO FORMSET

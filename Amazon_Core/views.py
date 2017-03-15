@@ -293,6 +293,11 @@ def ItemDetail(request,item_id):
         raise Http404("Item does not exist")
     return render(request, 'Amazon_Core/detail.html', {'item':item, 'form':form})
 
+def orderDetail(request, order_id):
+    order = get_object_or_404(Order,id=order_id)
+    shipmentSet = Shipment.objects.filter(order=order)
+    return render(request, 'Amazon_Core/orderDetail.html',{'order':order, 'shipmentSet': shipmentSet})
+
 def dynamicShipping(request):
     # This class is used to make empty formset forms required
     # See http://stackoverflow.com/questions/2406537/django-formsets-make-first-required/4951032#4951032
@@ -509,3 +514,9 @@ def checkout(request):
         x = 3
 
     return render(request, 'Amazon_Core/checkout.html', {'form': form})
+
+def viewOrder(request):
+    profile = get_object_or_404(CustomerProfile, user=request.user)
+    orderSet = Order.objects.filter(custProfile=profile)
+
+    return render(request, 'Amazon_Core/viewOrder.html', {'orderSet':orderSet})
