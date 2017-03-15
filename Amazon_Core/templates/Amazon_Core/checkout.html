@@ -9,7 +9,14 @@
     <h1 style="text-align: center" > Checkout</h1>
     </div>
 
-    <div>
+    <div class="container">
+    <form action="/checkout/" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button style="align: center" onclick="simpleCart.empty()" type="submit" name="_submit" class="btn">Submit
+
+    </button>
+</form>
 
     </div>
 
