@@ -3,9 +3,7 @@
 
 {% block content %}
 
-<script type="text/javascript"
-src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js">
-</script>
+<script type="text/javascript"  src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"> </script>
 
 <script>
     $(document).ready(function () {
@@ -42,7 +40,7 @@ src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js">
     }
 
     function addForm(btn, prefix) {
-        var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+        var formCount = parseInt($('#id' + prefix + '-TOTAL_FORMS').val());
         // You can only submit a maximum of 10 todo items
         if (formCount < 10) {
             // Clone a form (without event handlers) from the first form

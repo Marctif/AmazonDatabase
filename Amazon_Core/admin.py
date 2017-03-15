@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomerProfile, BillingAddress, ShippingAddress, CreditCard, Order,Shipment, Item,LineItem
+from .models import CustomerProfile, BillingAddress, ShippingAddress, CreditCard, Order,Shipment, Item, LineItem
 
 
 
