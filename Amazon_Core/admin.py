@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomerProfile, BillingAddress, ShippingAddress, CreditCard, Order, Timestamps,Shipment, Item
+from .models import CustomerProfile, BillingAddress, ShippingAddress, CreditCard, Order,Shipment, Item,LineItem
 
 
 
@@ -15,15 +15,23 @@ class CreditCardInline(admin.TabularInline):
     model = CreditCard
     extra = 1
 
+class ShipmentInline(admin.TabularInline):
+    model = Shipment
+    extra = 0
+
 class CustomerProfileAdmin(admin.ModelAdmin):
     inlines = [ShippingAddressInline, BillingAddressInline, CreditCardInline]
+
+class OrderAdmin(admin.ModelAdmin):
+    inlines = [ShipmentInline]
 
 admin.site.register(CustomerProfile, CustomerProfileAdmin)
 admin.site.register(CreditCard)
 admin.site.register(BillingAddress)
 admin.site.register(ShippingAddress)
-admin.site.register(Order)
+admin.site.register(Order, OrderAdmin)
 admin.site.register(Shipment)
-admin.site.register(Timestamps)
 admin.site.register(Item)
+admin.site.register(LineItem)
+
 
