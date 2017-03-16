@@ -5,15 +5,17 @@
 
 <div class="col-md-12">
     <h3 style="text-align: center" >CART</h3>
+
 </div>
     <div class="container">
     <div class="simpleCart_items"></div>
     <div>
         <p>Total: <div class="simpleCart_total"></div> </p>
 
-        <a href="javascript:;" class="simpleCart_checkout"> {% csrf_token %}Checkout</a>
+       <!-- <a href="javascript:;" class="simpleCart_checkout"> {% csrf_token %}Checkout</a> -->
+        <a href="{%  url 'checkout' %}"> Check out </a>
     </div>
-<a id="myLink" href = test.html></a>
+<a id="myLink" href = test.html> </a>
 
 
     <br>

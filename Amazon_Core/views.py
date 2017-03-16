@@ -51,7 +51,7 @@ def user_edit(request):
         if all([profile_form.is_valid(), shipping_form.is_valid()]):
             profile = profile_form.save()
             shipping = shipping_form.save()
-            return redirect(user)
+            return HttpResponseRedirect('/profile/')
 
     else:
         profile_form = CustomerProfileForm(instance=request.user.CustomerProfile)
@@ -247,6 +247,11 @@ def catalog(request):
     itemList = Item.objects.all()
     return render(request, 'Amazon_Core/catalog.html', {'itemList': itemList})
 
+def track(request):
+    itemList = Item.objects.all()
+    return render(request, 'Amazon_Core/track.html') , {'itemList': itemList}
+
+
 def formsetTest(request):
     ShippingFormSet = formset_factory(ShippingAddressForm, extra= 2)
     if(request.method == 'POST'):
@@ -401,7 +406,7 @@ def checkout(request):
         custProfile = get_object_or_404(CustomerProfile, user=request.user)
 
         form = OrderForm(custProfile,request.POST)
-        if(form.is_valid()):
+        if(form.is_fvalid()):
             latestOrder = Order.objects.latest('id')
 
             billAdr = form.cleaned_data['billAddress']

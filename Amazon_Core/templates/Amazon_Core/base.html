@@ -33,7 +33,7 @@
   $(document).ready(function(){
 
       // Sidebar
-      $(".button-collapse").sideNav({menuWidth: 320, activationWidth: 70, edge: 'left'});
+      $(".button-collapse").sideNav({menuWidth: 520, activationWidth: 70, edge: 'left'});
       // Dropdown
       $('.dropdown-button').dropdown({
            inDuration: 300,
@@ -126,6 +126,7 @@
       </li>
 
         <li><a href="{% url 'catalog' %}">Catalog</a></li>
+          <li><a href="{%  url 'track' %}"> Track orders </a> </li>
          {% if request.user.is_authenticated %}
                 <!-- <li>Welcome {{ user.username }}</li> -->
                 <li><a class="dropdown-button" href="#!" data-activates="dropdown1">Profile<i class="material-icons right">arrow_drop_down</i></a></li>

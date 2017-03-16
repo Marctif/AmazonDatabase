@@ -17,5 +17,6 @@ urlpatterns = [
     url(r'^update_profile/', views.update_profile_temp, name='update_profile'),
     url(r'^(?P<item_id>[0-9]+)', views.ItemDetail, name='detail'),
     url(r'^$', views.home, name='home'),
+    url(r'^trackorders/', views.track, name ='track'),
 
 ]
