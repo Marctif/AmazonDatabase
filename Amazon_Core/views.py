@@ -301,6 +301,18 @@ def ItemDetail(request,item_id):
 def orderDetail(request, order_id):
     order = get_object_or_404(Order,id=order_id)
     shipmentSet = Shipment.objects.filter(order=order)
+
+    if(request.method == 'POST'):
+        for ship in shipmentSet:
+            status = request.POST.get(str(ship.litem.id))
+            if(status == 'on'):
+                ship.status = 'RI'
+                messages.success(request, 'Returns initiated successfully.')
+
+    else:
+        print('aa')
+
+
     return render(request, 'Amazon_Core/orderDetail.html',{'order':order, 'shipmentSet': shipmentSet})
 
 def dynamicShipping(request):

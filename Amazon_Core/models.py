@@ -52,7 +52,8 @@ class Order(models.Model):
                 ('PE', 'PENDING'),
                 ('SH', 'SHIPPED'),
                 ('IN', 'INVOICED'),
-                ('RE', 'RETURNED'),
+                ('RI', 'RETURN INITIATED'),
+                ('RR', 'RETURN RECEIVED')
         )
 
     custProfile = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)

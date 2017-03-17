@@ -10,11 +10,32 @@
     <div class="container">
     <p style="text-align: center">Order number: {{ order.id }} Total: ${{ order.total_cost }}  Status: {{ order.status }}</p>
     <br>
-    {% for shipment in shipmentSet %}
-        <p>{{ shipment.litem}}     Status: {{ shipment.status }} </p>
 
-        
+    <form action="/viewOrder/{{ order.id }}" method="post">
+    {% csrf_token %}
+    {% for shipment in shipmentSet %}
+        <p>{{ shipment.litem}}     Status: {{ shipment.status }}
+            {% if shipment.status == 'PI' %}
+
+                        <input name="{{  shipment.litem.id  }}" type="checkbox" id="{{ shipment.litem.id }}" />
+                        <label for="{{ shipment.litem.id }}">Return</label>
+            {% endif %}
+          {% if shipment.status == 'SH' %}
+
+                        <input name="{{  shipment.litem.id  }}" type="checkbox" id="{{ shipment.litem.id }}" />
+                        <label for="{{ shipment.litem.id }}">Return</label>
+            {% endif %}
+          {% if shipment.status == 'IN' %}
+
+                        <input name="{{  shipment.litem.id  }}" type="checkbox" id="{{ shipment.litem.id }}" />
+                        <label for="{{ shipment.litem.id }}">Return</label>
+            {% endif %}
+        </p>
     {% endfor %}
+    <p style="text-align: center">
+    <button style="align: center" onclick="simpleCart.empty(); simpleCart.checkout()" type="submit" name="_submit" class="btn green">Submit Returns</button>
+    </p>
+    </form>
     </div>
 
 {% endblock %}
