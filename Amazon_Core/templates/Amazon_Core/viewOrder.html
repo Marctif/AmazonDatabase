@@ -1,0 +1,16 @@
+{% extends 'Amazon_Core/base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class="col-md-12">
+    <h1 style="text-align: center" > View Orders</h1>
+    </div>
+
+    <div class="container">
+        {% for order in orderSet %}
+            <p>${{ order.total_cost }} - {{ order.status }} <a href="{% url 'orderDetail' order.id %}">view order</a> </p>
+        {% endfor %}
+    </div>
+
+{% endblock %}

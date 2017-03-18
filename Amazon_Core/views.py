@@ -51,7 +51,7 @@ def user_edit(request):
         if all([profile_form.is_valid(), shipping_form.is_valid()]):
             profile = profile_form.save()
             shipping = shipping_form.save()
-            return redirect(user)
+            return HttpResponseRedirect('/profile/')
 
     else:
         profile_form = CustomerProfileForm(instance=request.user.CustomerProfile)
@@ -247,6 +247,11 @@ def catalog(request):
     itemList = Item.objects.all()
     return render(request, 'Amazon_Core/catalog.html', {'itemList': itemList})
 
+def track(request):
+    itemList = Item.objects.all()
+    return render(request, 'Amazon_Core/track.html') , {'itemList': itemList}
+
+
 def formsetTest(request):
     ShippingFormSet = formset_factory(ShippingAddressForm, extra= 2)
     if(request.method == 'POST'):
@@ -292,6 +297,11 @@ def ItemDetail(request,item_id):
     except Item.DoesNotExist:
         raise Http404("Item does not exist")
     return render(request, 'Amazon_Core/detail.html', {'item':item, 'form':form})
+
+def orderDetail(request, order_id):
+    order = get_object_or_404(Order,id=order_id)
+    shipmentSet = Shipment.objects.filter(order=order)
+    return render(request, 'Amazon_Core/orderDetail.html',{'order':order, 'shipmentSet': shipmentSet})
 
 def dynamicShipping(request):
     # This class is used to make empty formset forms required
@@ -401,7 +411,7 @@ def checkout(request):
         custProfile = get_object_or_404(CustomerProfile, user=request.user)
 
         form = OrderForm(custProfile,request.POST)
-        if(form.is_valid()):
+        if(form.is_fvalid()):
             latestOrder = Order.objects.latest('id')
 
             billAdr = form.cleaned_data['billAddress']
@@ -509,3 +519,9 @@ def checkout(request):
         x = 3
 
     return render(request, 'Amazon_Core/checkout.html', {'form': form})
+
+def viewOrder(request):
+    profile = get_object_or_404(CustomerProfile, user=request.user)
+    orderSet = Order.objects.filter(custProfile=profile)
+
+    return render(request, 'Amazon_Core/viewOrder.html', {'orderSet':orderSet})
