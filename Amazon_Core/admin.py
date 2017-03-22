@@ -25,12 +25,16 @@ class CustomerProfileAdmin(admin.ModelAdmin):
 class OrderAdmin(admin.ModelAdmin):
     inlines = [ShipmentInline]
 
+class ShipmentAdmin(admin.ModelAdmin):
+    list_display = ['__str__','status']
+
+
 admin.site.register(CustomerProfile, CustomerProfileAdmin)
 admin.site.register(CreditCard)
 admin.site.register(BillingAddress)
 admin.site.register(ShippingAddress)
 admin.site.register(Order, OrderAdmin)
-admin.site.register(Shipment)
+admin.site.register(Shipment, ShipmentAdmin)
 admin.site.register(Item)
 admin.site.register(LineItem)
 
