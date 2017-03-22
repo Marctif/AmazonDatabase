@@ -52,8 +52,6 @@ class Order(models.Model):
                 ('PE', 'PENDING'),
                 ('SH', 'SHIPPED'),
                 ('IN', 'INVOICED'),
-                ('RI', 'RETURN INITIATED'),
-                ('RR', 'RETURN RECEIVED')
         )
 
     custProfile = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)
@@ -64,7 +62,25 @@ class Order(models.Model):
     total_cost = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        return self.custProfile.first_name + " " + self.custProfile.last_name + " - $" + str(self.total_cost) + " ("+ self.get_status_display() + ") "
+        return "Order #" + str(self.id) + " - " + self.custProfile.first_name + " " + self.custProfile.last_name + " - $" + str(self.total_cost) + " ("+ self.get_status_display() + ") "
+
+    def save(self, *args, **kwargs):
+        shipSet = Shipment.objects.filter(order=self)
+        sum = 0
+        count = 0
+        shipReady = 0
+        for ship in shipSet:
+            if(ship.status != 'RR'):
+                sum = sum + ship.litem.cost * ship.litem.quantity
+            if(ship.status == 'SH'):
+                shipReady = shipReady + 1
+
+            count = count + 1
+        if(shipReady == count and count != 0):
+            self.status = 'SH'
+        self.total_cost = sum
+        super(Order, self).save(*args, **kwargs)
+
 
 class Item(models.Model):
     SKU = models.IntegerField(unique=True)
@@ -95,6 +111,8 @@ class Shipment(models.Model):
         ('PI', 'Pick'),
         ('PA', 'Pack'),
         ('SH', 'Ship'),
+        ('RI', 'RETURN INITIATED'),
+        ('RR', 'RETURN RECEIVED')
     )
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     litem = models.ForeignKey(LineItem, on_delete=models.CASCADE, null=True)
@@ -103,7 +121,13 @@ class Shipment(models.Model):
     shipped_date = models.DateField(default=datetime.now, blank=True)
 
     def __str__(self):
-        return str(self.order.id) + " - " + str(self.litem) + " - " + self.get_status_display()
+        return "Order: " + str(self.order.id) + " - " + str(self.litem) + " - " + self.get_status_display()
+
+    def save(self, *args, **kwargs):
+        super(Shipment, self).save(*args, **kwargs)
+        self.order.save()
+
+
 
 
 # TEST FOR DYNAMOC ADDING TO FORMSET

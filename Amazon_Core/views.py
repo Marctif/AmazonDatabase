@@ -303,11 +303,16 @@ def orderDetail(request, order_id):
     shipmentSet = Shipment.objects.filter(order=order)
 
     if(request.method == 'POST'):
+        returns = False
         for ship in shipmentSet:
             status = request.POST.get(str(ship.litem.id))
             if(status == 'on'):
                 ship.status = 'RI'
-                messages.success(request, 'Returns initiated successfully.')
+                ship.save()
+                order.save()
+                returns = True
+        if(returns):
+            messages.success(request, 'Returns initiated successfully.')
 
     else:
         print('aa')
@@ -501,7 +506,7 @@ def checkout(request):
 
             order = Order.objects.create(
                 custProfile=custProfile,
-                status='PI',
+                status='PE',
                 payMethod=card,
                 total_cost=0,
             )
