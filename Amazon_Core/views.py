@@ -33,7 +33,11 @@ def demo(request):
 @login_required
 def userprofile(request):
     user = request.user
-    profile = CustomerProfile.objects.get(user = request.user)
+    try:
+        profile = CustomerProfile.objects.get(user = request.user)
+    except:
+        profile = CustomerProfile.objects.create(user = request.user)
+        CreditCard.objects.create(custProfile=profile)
     shipping = profile.shippingaddress_set.all()
     billing = profile.billingaddress_set.all()
     credit = profile.creditcard_set.all()
@@ -537,3 +541,40 @@ def viewOrder(request):
     orderSet = Order.objects.filter(custProfile=profile)
 
     return render(request, 'Amazon_Core/viewOrder.html', {'orderSet':orderSet})
+
+def editCreditcard(request):
+    custProfile = get_object_or_404(CustomerProfile,user=request.user)
+    try:
+        creditcard = CreditCard.objects.get(custProfile=custProfile)
+    except:
+        creditcard = CreditCard.objects.create(custProfile=custProfile)
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = CreditCardForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+
+            number = form.cleaned_data.get('number')
+            securityCode = form.cleaned_data.get('securityCode')
+            month = form.cleaned_data.get('month')
+            year = form.cleaned_data.get('year')
+
+            creditcard.CreditCardNumber = number
+            creditcard.SecurityCode = securityCode
+            creditcard.ExpMonth = month
+            creditcard.ExpYear = year
+
+            creditcard.save()
+
+            messages.success(request, 'Credit card info updated successfully.')
+            return HttpResponseRedirect('/profile/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        number = creditcard.CreditCardNumber
+        securityCode = creditcard.SecurityCode
+        month = creditcard.ExpMonth
+        year = creditcard.ExpYear
+        form = CreditCardForm(initial={'number': number, 'securityCode': securityCode,'ExpMonth': month, 'ExpYear':year})
+
+    return render(request,'Amazon_Core/editCreditcard.html', {'form':form})

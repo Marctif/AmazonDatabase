@@ -1,0 +1,27 @@
+{% extends 'Amazon_Core/base.html' %}
+{% load static %}
+{% load material_form %}
+
+
+{% block content %}
+
+    <div class="col-md-12">
+    <h1 style="text-align: center" > Edit CreditCard</h1>
+    </div>
+
+    <div class="container">
+    <form method="POST">
+    {% csrf_token %}
+
+    {% form form=form %}
+    {% endform %}
+
+     <button style="align: center" type="submit" name="_submit" class="btn">Submit</button>
+
+    </form>
+    </div>
+
+
+
+{% endblock %}
+

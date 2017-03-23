@@ -64,7 +64,7 @@
                </div>
 
                <div id="credit">
-                    <a href="{% url 'dynamicBilling'  %}" ><button class="btn waves-effect waves-teal">Update/Edit</button></a>
+                    <a href="{% url 'editCreditcard'  %}" ><button class="btn waves-effect waves-teal">Update/Edit</button></a>
                    {%for credit in credit%}
                        <h5 style="color:forestgreen;"><i> Credit Card</i></h5>
                        </br><b><i> Credit Card Number : </i></b> {{ credit.CreditCardNumber }}</br>

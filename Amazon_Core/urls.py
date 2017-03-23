@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^viewOrder/(?P<order_id>[0-9]+)', views.orderDetail, name='orderDetail'),
     url(r'^viewOrder/', views.viewOrder, name='viewOrder'),
     url(r'^checkout/', views.checkout, name='checkout'),
+    url(r'^updateCreditcard/', views.editCreditcard, name='editCreditcard'),
     url(r'^formsetTest/', views.formsetTest, name='formsetTest'),
     url(r'^profile/', views.userprofile, name='profile'),
     url(r'^update_profile/', views.update_profile_temp, name='update_profile'),

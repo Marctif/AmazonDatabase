@@ -115,5 +115,6 @@ class OrderForm(ModelForm):
     def __init__(self, custProfile, *args, **kwargs):
         super(OrderForm, self).__init__(*args, **kwargs)
         self.fields['billAddress'].queryset = BillingAddress.objects.filter(custProfile=custProfile)
+        self.fields['shipAddress'].queryset = ShippingAddress.objects.filter(custProfile=custProfile)
         self.fields['payMethod'].queryset = CreditCard.objects.filter(custProfile=custProfile)
 
