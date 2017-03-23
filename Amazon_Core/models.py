@@ -45,7 +45,8 @@ class CreditCard(models.Model):
     ExpYear = models.IntegerField(choices=YEARS, default=2017,null=True)
 
     def __str__(self):
-        return str(self.CreditCardNumber)
+        num = self.CreditCardNumber % 10000
+        return "************" + str(num)
 
 class Order(models.Model):
     STATUS = (
