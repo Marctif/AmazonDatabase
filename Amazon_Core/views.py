@@ -37,7 +37,7 @@ def userprofile(request):
         profile = CustomerProfile.objects.get(user = request.user)
     except:
         profile = CustomerProfile.objects.create(user = request.user)
-        CreditCard.objects.create(custProfile=profile)
+        CreditCard.objects.create(custProfile=profile, CreditCardNumber=0000000000000000)
     shipping = profile.shippingaddress_set.all()
     billing = profile.billingaddress_set.all()
     credit = profile.creditcard_set.all()
@@ -526,7 +526,7 @@ def checkout(request):
                 )
                 total = total + i.quantity * i.cost
 
-            order.total_cost = total
+            order.total_cost = total * 1.0825
 
             order.save()
 
