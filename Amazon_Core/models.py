@@ -60,7 +60,7 @@ class Order(models.Model):
     shipAddress = models.ForeignKey(ShippingAddress,on_delete=models.CASCADE,null=True)
     status = models.CharField(max_length=10, choices=STATUS, default='PE', )
     payMethod = models.ForeignKey(CreditCard, on_delete=models.CASCADE, null=True)
-    total_cost = models.PositiveIntegerField(default=0)
+    total_cost = models.FloatField(default=0)
 
     def __str__(self):
         return "Order #" + str(self.id) + " - " + self.custProfile.first_name + " " + self.custProfile.last_name + " - $" + str(self.total_cost) + " ("+ self.get_status_display() + ") "
@@ -79,7 +79,7 @@ class Order(models.Model):
             count = count + 1
         if(shipReady == count and count != 0):
             self.status = 'SH'
-        self.total_cost = sum
+        self.total_cost = sum * 1.0825
         super(Order, self).save(*args, **kwargs)
 
 
