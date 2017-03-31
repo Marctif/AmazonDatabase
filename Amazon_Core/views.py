@@ -25,6 +25,10 @@ import datetime
 # Create your views here.
 
 def home(request):
+    now = datetime.datetime.now()
+    hour = now.hour
+    print(datetime.datetime.now())
+    print(hour)
     return render(request, 'Amazon_Core/home.html')
 
 def demo(request):
@@ -583,3 +587,18 @@ def editCreditcard(request):
         form = CreditCardForm(initial={'number': number, 'securityCode': securityCode,'ExpMonth': month, 'ExpYear':year})
 
     return render(request,'Amazon_Core/editCreditcard.html', {'form':form})
+
+def createSubscription(request):
+    items = Item.objects.all()
+    if(request.method == 'POST'):
+        lineitemset = []
+        for item in items:
+            val = request.POST.get(str(item.id))
+            if(val != ""):
+                print(item.name + " " + str(item.price) + " " + val)
+                subtotal = int(val) * item.price
+                lineitem = LineItem.objects.create(item=item,cost=item.price, quantity=int(val), subTotal=subtotal)
+                lineitemset.append(lineitem)
+    else:
+        x = 2
+    return render(request,'Amazon_Core/createSubscriptions.html',{'items': items})

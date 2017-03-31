@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^cart/', views.cart, name='cart'),
     url(r'^viewOrder/(?P<order_id>[0-9]+)', views.orderDetail, name='orderDetail'),
     url(r'^viewOrder/', views.viewOrder, name='viewOrder'),
+    url(r'^createSubscription/', views.createSubscription, name='createSubscription'),
     url(r'^checkout/', views.checkout, name='checkout'),
     url(r'^updateCreditcard/', views.editCreditcard, name='editCreditcard'),
     url(r'^formsetTest/', views.formsetTest, name='formsetTest'),
