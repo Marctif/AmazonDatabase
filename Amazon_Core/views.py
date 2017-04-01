@@ -590,6 +590,8 @@ def editCreditcard(request):
 
 def createSubscription(request):
     items = Item.objects.all()
+    custProfile = get_object_or_404(CustomerProfile, user=request.user)
+
     if(request.method == 'POST'):
         lineitemset = []
         for item in items:
@@ -599,6 +601,14 @@ def createSubscription(request):
                 subtotal = int(val) * item.price
                 lineitem = LineItem.objects.create(item=item,cost=item.price, quantity=int(val), subTotal=subtotal)
                 lineitemset.append(lineitem)
+
+        form = OrderForm(custProfile, request.POST)
+
+        billAdr = form.cleaned_data['billAddress']
+        shipAdr = form.cleaned_data['shipAddress']
+        creditCard = form.cleaned_data['payMethod']
+
+
     else:
-        x = 2
-    return render(request,'Amazon_Core/createSubscriptions.html',{'items': items})
+        form = OrderForm(custProfile=custProfile)
+    return render(request,'Amazon_Core/createSubscriptions.html',{'items': items,'form':form})
