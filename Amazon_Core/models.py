@@ -138,6 +138,7 @@ class Subscription(models.Model):
     custProfile = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE, null=True)
     timeframe = models.ForeignKey(Timeframe,on_delete=models.CASCADE,null=True )
     date_created = models.DateField(default=datetime.now, blank=True)
+    next_shipment = models.DateField(default=datetime.now,blank=True)
     billAddress = models.ForeignKey(BillingAddress, on_delete=models.CASCADE, null=True)
     shipAddress = models.ForeignKey(ShippingAddress, on_delete=models.CASCADE, null=True)
     payMethod = models.ForeignKey(CreditCard, on_delete=models.CASCADE, null=True)

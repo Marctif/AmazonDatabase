@@ -10,7 +10,9 @@ from django.http import HttpResponseRedirect
 from django.forms.formsets import formset_factory
 from django.shortcuts import get_list_or_404, get_object_or_404
 from django.http import Http404
+from datetime import datetime, timedelta
 from django.contrib.auth.decorators import login_required
+from dateutil.relativedelta import relativedelta
 
 from django.shortcuts import render_to_response
 #from django.core.context_processors import csrf
@@ -25,10 +27,7 @@ import datetime
 # Create your views here.
 
 def home(request):
-    now = datetime.datetime.now()
-    hour = now.hour
-    print(datetime.datetime.now())
-    print(hour)
+    checkSubs(request=request)
     return render(request, 'Amazon_Core/home.html')
 
 def demo(request):
@@ -268,7 +267,6 @@ def formsetTest(request):
         if ship_formSet.is_valid():
             for shipForm in ship_formSet:
                 street = shipForm.cleaned_data.get('street')
-                print(street)
     else:
         ship_formSet = ShippingFormSet()
     return render(request, 'Amazon_Core/formsetTest.html', {'ship_formSet':ship_formSet})
@@ -482,7 +480,6 @@ def checkout(request):
             lineItemSet = []
 
             for x in range(0, count):
-                print(itemSet[x].name + " " + str(quantitySet[x]))
                 item = itemSet[x]
                 quantity = quantitySet[x]
 
@@ -596,21 +593,29 @@ def createSubscription(request):
 
         timeForm = TimeframeForm(request.POST)
         period = timeForm['period'].value()
+        now = datetime.date.today()
+        future = now +  relativedelta(months=int(period))
+
         timeframe = Timeframe.objects.create(period=period)
 
         subscription = Subscription.objects.create(custProfile=custProfile,timeframe=timeframe,billAddress=billAdr,
-                                                   shipAddress=shipAdr,payMethod=creditCard,total_cost=0)
+                                                   shipAddress=shipAdr,payMethod=creditCard,total_cost=0,
+                                                   date_created=now,next_shipment=future)
 
         subitemset = []
         for item in items:
             val = request.POST.get(str(item.id))
             if(val != ""):
-                print(item.name + " " + str(item.price) + " " + val)
                 subtotal = int(val) * item.price
                 subitem = SubscriptionItem.objects.create(subscription=subscription,item=item,cost=item.price, quantity=int(val), subTotal=subtotal)
                 subitemset.append(subitem)
 
         subscription.save()
+
+
+        status = request.POST.get("tocreate")
+        if (status == 'on'):
+            orderFromSub(subscription=subscription,custProfile=custProfile,request=request)
 
         messages.success(request, 'Subscription created successfully.')
         return HttpResponseRedirect('/')
@@ -622,6 +627,25 @@ def createSubscription(request):
         orderForm = OrderForm(custProfile=custProfile)
         timeForm = TimeframeForm()
     return render(request,'Amazon_Core/createSubscriptions.html',{'items': items,'form':orderForm,'form2':timeForm})
+
+def orderFromSub(subscription, custProfile, request):
+    order = Order.objects.create(
+        custProfile=custProfile,
+        status='PE',
+        payMethod=subscription.payMethod,
+        billAddress=subscription.billAddress,
+        shipAddress=subscription.shipAddress,
+        total_cost=0,
+    )
+    subItemSet = SubscriptionItem.objects.filter(subscription=subscription)
+    for sub in subItemSet:
+        subItem = sub.item
+        lineitem = LineItem.objects.create(item=subItem,quantity=sub.quantity,cost=sub.cost,subTotal=sub.subTotal)
+        shipment = Shipment.objects.create(order=order,litem=lineitem,status='PI')
+        shipment.save()
+    order.save()
+    messages.success(request, 'Order Created.')
+
 
 def viewSubscriptions(request):
 
@@ -680,3 +704,16 @@ def addSubItem(request, subId):
     else:
         form = SubForm()
     return  render(request,'Amazon_Core/addSubItem.html',{'form':form})
+
+#Checks all subs to see if we need to creaet an order
+def checkSubs(request):
+    custProfile = get_object_or_404(CustomerProfile,user=request.user)
+    subSet = Subscription.objects.all()
+    for sub in subSet:
+        now = datetime.date.today()
+        subDate = sub.next_shipment
+        dayBefore = subDate - timedelta(days=1)
+        if(now >= subDate):
+            orderFromSub(subscription=sub,custProfile=custProfile,request=request)
+            sub.next_shipment = sub.next_shipment + relativedelta(months=int(sub.timeframe.period))
+            sub.save()
