@@ -1,0 +1,86 @@
+{% extends 'Amazon_Core/base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class="col-md-12">
+    <h1 style="text-align: center" > Create Subscriptions</h1>
+    </div>
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col s4">
+                <h4>Item Name</h4>
+            </div>
+
+            <div class="col s4">
+                <h4>Cost per Item</h4>
+            </div>
+
+            <div class="col s4">
+                <h4>Number to order</h4>
+            </div>
+        </div>
+        <form action="" method="POST">
+            {% csrf_token %}
+            {% for item in items %}
+                <div class="row">
+                    <div class="col s4">
+                        <p>{{ item.name }}</p>
+                    </div>
+
+                    <div class="col s4">
+                        <p>${{ item.price }}</p>
+                    </div>
+
+                    <div class="col s4">
+                        <input name="{{  item.id  }}" type="text" id="{{ item.id }}" />
+                    </div>
+                </div>
+            {% endfor %}
+
+        <br>
+        <br>
+        <br>
+
+        <h4 style="text-align: center">Set a reoccuring time period</h4>
+        {{ form2.as_p }}
+
+        <br>
+        <br>
+        <br>
+
+        <h4 style="text-align: center">Set Billing/Shipping address and CreditCard</h4>
+        {{ form.as_p }}
+
+        <br>
+        <br>
+        <br>
+
+        <h4 style="text-align: center">Check to create an order today (unchecked will mean first order is created in selected time period from today) </h4>
+        <div class="col s12">
+                <input name="tocreate" type="checkbox" id="tocreate" />
+                <label for="tocreate">Order Today</label>
+        </div>
+
+
+        <p style="text-align: center">
+            <button style="align: center"  type="submit" name="_submit" class="btn" >Submit Template
+            </button>
+        </p>
+
+        <br>
+        <br>
+
+        </form>
+
+
+
+
+
+    </div>
+
+
+
+{% endblock %}
+

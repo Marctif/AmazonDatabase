@@ -82,6 +82,17 @@ class ItemForm(forms.Form):
         price = cleaned_data.get('price')
         numAvailable = cleaned_data.get('numAvailable')
 
+class SubForm(forms.Form):
+    item = forms.ModelChoiceField(queryset=Item.objects.all())
+    amount = forms.IntegerField(label="Amount")
+
+    def clean(self):
+        cleaned_data = super(SubForm, self).clean()
+
+        item = cleaned_data.get('item')
+        amount = cleaned_data.get('amount')
+
+
 class TodoListForm(ModelForm):
   class Meta:
     model = TodoList
@@ -105,3 +116,21 @@ class BillingForm(ModelForm):
         model = BillingAddress
         fields = '__all__'
         exclude = ('custProfile', 'count',)
+
+class OrderForm(ModelForm):
+    class Meta:
+        model = Order
+        fields = '__all__'
+        exclude = ('custProfile','status','total_cost')
+
+    def __init__(self, custProfile, *args, **kwargs):
+        super(OrderForm, self).__init__(*args, **kwargs)
+        self.fields['billAddress'].queryset = BillingAddress.objects.filter(custProfile=custProfile)
+        self.fields['shipAddress'].queryset = ShippingAddress.objects.filter(custProfile=custProfile)
+        self.fields['payMethod'].queryset = CreditCard.objects.filter(custProfile=custProfile)
+
+class TimeframeForm(ModelForm):
+    class Meta:
+        model = Timeframe
+        fields = '__all__'
+
