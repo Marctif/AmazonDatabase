@@ -116,6 +116,10 @@
   <li><a href="{% url 'profile' %}">Edit Profile</a></li>
   <li class="divider"></li>
   <li><a href="{% url 'viewOrder' %}">View Orders</a></li>
+  <li class="divider"></li>
+  <li><a href="{% url 'createSubscription' %}">Create Subscription</a></li>
+  <li class="divider"></li>
+  <li><a href="{% url 'viewSubscriptions' %}">View Subscriptions</a></li>
 </ul>
 
 <nav>
@@ -126,10 +130,8 @@
       </li>
 
         <li><a href="{% url 'catalog' %}">Catalog</a></li>
-          <li><a href="{%  url 'track' %}"> Track orders </a> </li>
-         {% if request.user.is_authenticated %}
+           {% if request.user.is_authenticated %}
                 <!-- <li>Welcome {{ user.username }}</li> -->
-                <li><a href="{% url 'createSubscription' %}">Create Subscription</a></li>
                 <li><a class="dropdown-button" href="#!" data-activates="dropdown1">Profile<i class="material-icons right">arrow_drop_down</i></a></li>
 
                 <li><a href="{% url 'account_logout' %}">Log out</a></li>

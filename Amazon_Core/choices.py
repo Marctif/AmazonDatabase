@@ -17,3 +17,12 @@ YEARS = (
     (2022, 2022),
     (2023, 2023),
 )
+
+TIMEFRAME = (
+    ( 1,"Every Week"),
+    ( 2,"Every 2 Weeks"),
+    ( 3,"Every 3 Weeks"),
+    ( 4,"Every Month"),
+    (5,"Every 2 Months"),
+    (6,"Every 3 Months"),
+)
