@@ -45,14 +45,14 @@ class CreditCard(models.Model):
     ExpYear = models.IntegerField(choices=YEARS, default=2017,null=True)
 
     def __str__(self):
-        return str(self.CreditCardNumber)
+        num = self.CreditCardNumber % 10000
+        return "************" + str(num)
 
 class Order(models.Model):
     STATUS = (
                 ('PE', 'PENDING'),
                 ('SH', 'SHIPPED'),
                 ('IN', 'INVOICED'),
-                ('RE', 'RETURNED'),
         )
 
     custProfile = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)
@@ -60,10 +60,28 @@ class Order(models.Model):
     shipAddress = models.ForeignKey(ShippingAddress,on_delete=models.CASCADE,null=True)
     status = models.CharField(max_length=10, choices=STATUS, default='PE', )
     payMethod = models.ForeignKey(CreditCard, on_delete=models.CASCADE, null=True)
-    total_cost = models.PositiveIntegerField(default=0)
+    total_cost = models.FloatField(default=0)
 
     def __str__(self):
-        return self.custProfile.first_name + " " + self.custProfile.last_name + " - $" + str(self.total_cost) + " ("+ self.get_status_display() + ") "
+        return "Order #" + str(self.id) + " - " + self.custProfile.first_name + " " + self.custProfile.last_name + " - $" + str(self.total_cost) + " ("+ self.get_status_display() + ") "
+
+    def save(self, *args, **kwargs):
+        shipSet = Shipment.objects.filter(order=self)
+        sum = 0
+        count = 0
+        shipReady = 0
+        for ship in shipSet:
+            if(ship.status != 'RR'):
+                sum = sum + ship.litem.cost * ship.litem.quantity
+            if(ship.status == 'SH'):
+                shipReady = shipReady + 1
+
+            count = count + 1
+        if(shipReady == count and count != 0):
+            self.status = 'SH'
+        self.total_cost = sum * 1.0825
+        super(Order, self).save(*args, **kwargs)
+
 
 class Item(models.Model):
     SKU = models.IntegerField(unique=True)
@@ -94,6 +112,8 @@ class Shipment(models.Model):
         ('PI', 'Pick'),
         ('PA', 'Pack'),
         ('SH', 'Ship'),
+        ('RI', 'RETURN INITIATED'),
+        ('RR', 'RETURN RECEIVED')
     )
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     litem = models.ForeignKey(LineItem, on_delete=models.CASCADE, null=True)
@@ -102,7 +122,51 @@ class Shipment(models.Model):
     shipped_date = models.DateField(default=datetime.now, blank=True)
 
     def __str__(self):
-        return str(self.order.id) + " - " + str(self.litem) + " - " + self.get_status_display()
+        return "Order: " + str(self.order.id) + " - " + str(self.litem) + " - " + self.get_status_display()
+
+    def save(self, *args, **kwargs):
+        super(Shipment, self).save(*args, **kwargs)
+        self.order.save()
+
+class Timeframe(models.Model):
+    period = models.IntegerField(choices=TIMEFRAME,default=1,null=True)
+
+    def __str__(self):
+        return self.get_period_display()
+
+class Subscription(models.Model):
+    custProfile = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE, null=True)
+    timeframe = models.ForeignKey(Timeframe,on_delete=models.CASCADE,null=True )
+    date_created = models.DateField(default=datetime.now, blank=True)
+    next_shipment = models.DateField(default=datetime.now,blank=True)
+    billAddress = models.ForeignKey(BillingAddress, on_delete=models.CASCADE, null=True)
+    shipAddress = models.ForeignKey(ShippingAddress, on_delete=models.CASCADE, null=True)
+    payMethod = models.ForeignKey(CreditCard, on_delete=models.CASCADE, null=True)
+    total_cost = models.FloatField(default=0)
+
+    def save(self, *args, **kwargs):
+        subSet = SubscriptionItem.objects.filter(subscription=self)
+        sum = 0
+        for item in subSet:
+            sum = sum + item.subTotal
+
+        self.total_cost = sum
+        super(Subscription, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return "Subscription #" + str(self.id) + " - " + self.custProfile.first_name + " " + self.custProfile.last_name + " - $" + str(self.total_cost) + " " + str(self.timeframe)
+
+
+class SubscriptionItem(models.Model):
+    subscription = models.ForeignKey(Subscription,on_delete=models.CASCADE,null=True)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True)
+    quantity = models.PositiveIntegerField(default=1)
+    cost = models.IntegerField(null=True)
+    subTotal = models.IntegerField(null=True)
+
+    def __str__(self):
+        return self.item.name + " - " + str(self.quantity) + " @ $" + str(self.cost) + " per"
+
 
 
 # TEST FOR DYNAMOC ADDING TO FORMSET

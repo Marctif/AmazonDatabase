@@ -9,7 +9,9 @@
 
     <div class="container">
         {% for order in orderSet %}
-            <p>${{ order.total_cost }} - {{ order.status }} <a href="{% url 'orderDetail' order.id %}">view order</a> </p>
+            <div class="row">
+                <p>Order #{{ order.id }} - ${{ order.total_cost }} - {{ order.status }} <a href="{% url 'orderDetail' order.id %}">view order</a> </p>
+            </div>
         {% endfor %}
     </div>
 

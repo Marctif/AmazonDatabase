@@ -10,11 +10,39 @@
     <div class="container">
     <p style="text-align: center">Order number: {{ order.id }} Total: ${{ order.total_cost }}  Status: {{ order.status }}</p>
     <br>
-    {% for shipment in shipmentSet %}
-        <p>{{ shipment.litem}}     Status: {{ shipment.status }} </p>
 
-        
+    <form action="/viewOrder/{{ order.id }}" method="post">
+    {% csrf_token %}
+    {% for shipment in shipmentSet %}
+        <div class="row">
+             <div class="col s3"><p>Shipment ID: {{ shipment.id }}</p></div>
+            <div class="col s3"><p>{{ shipment.litem}} </p></div>
+            <div class="col s3"><p>{{ shipment.status}} </p></div>
+            <div class="col s3"><p>
+                {% if shipment.status == 'PI' %}
+
+                            <input name="{{  shipment.litem.id  }}" type="checkbox" id="{{ shipment.litem.id }}" />
+                            <label for="{{ shipment.litem.id }}">Return</label>
+                {% endif %}
+              {% if shipment.status == 'PA' %}
+
+                            <input name="{{  shipment.litem.id  }}" type="checkbox" id="{{ shipment.litem.id }}" />
+                            <label for="{{ shipment.litem.id }}">Return</label>
+                {% endif %}
+              {% if shipment.status == 'SH' %}
+
+                            <input name="{{  shipment.litem.id  }}" type="checkbox" id="{{ shipment.litem.id }}" />
+                            <label for="{{ shipment.litem.id }}">Return</label>
+                {% endif %}
+            </p></div>
+
+
+        </div>
     {% endfor %}
+    <p style="text-align: center">
+    <button style="align: center"  type="submit" name="_submit" class="btn green">Submit Returns</button>
+    </p>
+    </form>
     </div>
 
 {% endblock %}
