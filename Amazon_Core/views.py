@@ -59,7 +59,7 @@ def user_edit(request):
         if all([profile_form.is_valid(), shipping_form.is_valid()]):
             profile = profile_form.save()
             shipping = shipping_form.save()
-            return redirect(user)
+            return HttpResponseRedirect('/profile/')
 
     else:
         profile_form = CustomerProfileForm(instance=request.user.CustomerProfile)
@@ -255,6 +255,11 @@ def catalog(request):
     itemList = Item.objects.all()
     return render(request, 'Amazon_Core/catalog.html', {'itemList': itemList})
 
+def track(request):
+    itemList = Item.objects.all()
+    return render(request, 'Amazon_Core/track.html') , {'itemList': itemList}
+
+
 def formsetTest(request):
     ShippingFormSet = formset_factory(ShippingAddressForm, extra= 2)
     if(request.method == 'POST'):
@@ -316,10 +321,6 @@ def orderDetail(request, order_id):
                 returns = True
         if(returns):
             messages.success(request, 'Returns initiated successfully.')
-
-    else:
-        print('aa')
-
 
     return render(request, 'Amazon_Core/orderDetail.html',{'order':order, 'shipmentSet': shipmentSet})
 
@@ -588,22 +589,94 @@ def createSubscription(request):
     custProfile = get_object_or_404(CustomerProfile, user=request.user)
 
     if(request.method == 'POST'):
-        lineitemset = []
+        orderForm = OrderForm(custProfile, request.POST)
+        billAdr = BillingAddress.objects.get(pk=orderForm['billAddress'].value())
+        shipAdr = ShippingAddress.objects.get(pk=orderForm['shipAddress'].value())
+        creditCard = CreditCard.objects.get(pk=orderForm['payMethod'].value())
+
+        timeForm = TimeframeForm(request.POST)
+        period = timeForm['period'].value()
+        timeframe = Timeframe.objects.create(period=period)
+
+        subscription = Subscription.objects.create(custProfile=custProfile,timeframe=timeframe,billAddress=billAdr,
+                                                   shipAddress=shipAdr,payMethod=creditCard,total_cost=0)
+
+        subitemset = []
         for item in items:
             val = request.POST.get(str(item.id))
             if(val != ""):
                 print(item.name + " " + str(item.price) + " " + val)
                 subtotal = int(val) * item.price
-                lineitem = LineItem.objects.create(item=item,cost=item.price, quantity=int(val), subTotal=subtotal)
-                lineitemset.append(lineitem)
+                subitem = SubscriptionItem.objects.create(subscription=subscription,item=item,cost=item.price, quantity=int(val), subTotal=subtotal)
+                subitemset.append(subitem)
 
-        form = OrderForm(custProfile, request.POST)
+        subscription.save()
 
-        billAdr = form.cleaned_data['billAddress']
-        shipAdr = form.cleaned_data['shipAddress']
-        creditCard = form.cleaned_data['payMethod']
+        messages.success(request, 'Subscription created successfully.')
+        return HttpResponseRedirect('/')
+
+
 
 
     else:
-        form = OrderForm(custProfile=custProfile)
-    return render(request,'Amazon_Core/createSubscriptions.html',{'items': items,'form':form})
+        orderForm = OrderForm(custProfile=custProfile)
+        timeForm = TimeframeForm()
+    return render(request,'Amazon_Core/createSubscriptions.html',{'items': items,'form':orderForm,'form2':timeForm})
+
+def viewSubscriptions(request):
+
+    profile = get_object_or_404(CustomerProfile, user=request.user)
+    subscriptions = Subscription.objects.filter(custProfile=profile)
+
+    if (request.method == 'POST'):
+        delete = False
+        for sub in subscriptions:
+            status = request.POST.get(str(sub.id))
+            if (status == 'on'):
+                sub.delete()
+                delete = True
+        if(delete):
+            messages.success(request, 'Templates deleted successfully.')
+            return HttpResponseRedirect('/')
+
+
+    return render(request,'Amazon_Core/viewSubscriptions.html',{'subscriptions':subscriptions})
+
+def subscriptionDetail(request, subscription_id):
+    subscription = get_object_or_404(Subscription,id=subscription_id)
+    subItemSet = SubscriptionItem.objects.filter(subscription=subscription)
+
+    if(request.method == 'POST'):
+        for sub in subItemSet:
+           status = request.POST.get(str(sub.id))
+           if(status == 'on'):
+               sub.delete()
+           else:
+                amount = request.POST.get(str(sub.id)+"q")
+                sub.quantity = int(amount)
+
+                sub.subTotal = int(amount) * int(sub.cost)
+                sub.save()
+
+        subscription.save()
+        messages.success(request, 'Template changed successfully.')
+        return HttpResponseRedirect('/viewSubscriptions/')
+
+    return render(request, 'Amazon_Core/subscriptionDetail.html',{'subscription':subscription, 'subItemSet': subItemSet})
+
+def addSubItem(request, subId):
+    subscription = get_object_or_404(Subscription,id=subId)
+
+    if(request.method == 'POST'):
+        form = SubForm(request.POST)
+        if(form.is_valid()):
+            item = form.cleaned_data.get('item')
+            amount = form.cleaned_data.get('amount')
+            subitem = SubscriptionItem.objects.create(subscription=subscription, item=item, cost=item.price,
+                                                      quantity=amount, subTotal=(amount * item.price))
+            messages.success(request, 'Item added to template.')
+            return HttpResponseRedirect('/viewSubscriptions/' + str(subId))
+
+    else:
+        form = SubForm()
+    return  render(request,'Amazon_Core/addSubItem.html',{'form':form})

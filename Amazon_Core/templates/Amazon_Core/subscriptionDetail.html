@@ -1,0 +1,44 @@
+{% extends 'Amazon_Core/base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class="col-md-12">
+    <h1 style="text-align: center" > Subscription Detail</h1>
+    </div>
+
+    <div class="container">
+    <p style="text-align: center">Subscription number: {{ subscription.id }} Total: ${{ subscription.total_cost }}  Period: {{ subscription.timeframe }}</p>
+    <br>
+
+    <div class="row">
+        <div class="col s3"><h4>Item Name</h4></div>
+        <div class="col s3"><h4>Price</h4></div>
+        <div class="col s3"><h4>Quantity</h4></div>
+        <div class="col s3"><h4>To Delete</h4></div>
+    </div>
+
+
+    <form action="/viewSubscriptions/{{ subscription.id }}" method="post">
+    {% csrf_token %}
+    {% for subItem in subItemSet %}
+        <div class="row">
+            <div class="col s3"><p>{{ subItem.item.name }}</p></div>
+            <div class="col s3"><p>${{ subItem.item.price}} </p></div>
+            <div class="col s3"><p>  <input name="{{  subItem.id  }}q" type="text" id="{{ subItem.id }}q" value="{{ subItem.quantity }}" /> </p></div>
+            <div class="col s3"><p>
+                    <input name="{{  subItem.id  }}" type="checkbox" id="{{ subItem.id }}" />
+                    <label for="{{ subItem.id }}">Delete</label>
+            </p></div>
+
+
+        </div>
+    {% endfor %}
+    <p style="text-align: center"> <a href="{% url 'addSubItem' subscription.id %}"> Add Item </a> </p>
+    <p style="text-align: center">
+    <button style="align: center"  type="submit" name="_submit" class="btn green">Submit Changes</button>
+    </p>
+    </form>
+    </div>
+
+{% endblock %}

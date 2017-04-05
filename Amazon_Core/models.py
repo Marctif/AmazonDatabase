@@ -128,6 +128,43 @@ class Shipment(models.Model):
         super(Shipment, self).save(*args, **kwargs)
         self.order.save()
 
+class Timeframe(models.Model):
+    period = models.IntegerField(choices=TIMEFRAME,default=1,null=True)
+
+    def __str__(self):
+        return self.get_period_display()
+
+class Subscription(models.Model):
+    custProfile = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE, null=True)
+    timeframe = models.ForeignKey(Timeframe,on_delete=models.CASCADE,null=True )
+    date_created = models.DateField(default=datetime.now, blank=True)
+    billAddress = models.ForeignKey(BillingAddress, on_delete=models.CASCADE, null=True)
+    shipAddress = models.ForeignKey(ShippingAddress, on_delete=models.CASCADE, null=True)
+    payMethod = models.ForeignKey(CreditCard, on_delete=models.CASCADE, null=True)
+    total_cost = models.FloatField(default=0)
+
+    def save(self, *args, **kwargs):
+        subSet = SubscriptionItem.objects.filter(subscription=self)
+        sum = 0
+        for item in subSet:
+            sum = sum + item.subTotal
+
+        self.total_cost = sum
+        super(Subscription, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return "Subscription #" + str(self.id) + " - " + self.custProfile.first_name + " " + self.custProfile.last_name + " - $" + str(self.total_cost) + " " + str(self.timeframe)
+
+
+class SubscriptionItem(models.Model):
+    subscription = models.ForeignKey(Subscription,on_delete=models.CASCADE,null=True)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True)
+    quantity = models.PositiveIntegerField(default=1)
+    cost = models.IntegerField(null=True)
+    subTotal = models.IntegerField(null=True)
+
+    def __str__(self):
+        return self.item.name + " - " + str(self.quantity) + " @ $" + str(self.cost) + " per"
 
 
 
