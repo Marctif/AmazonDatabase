@@ -8,8 +8,9 @@
     </div>
 
     <div class="container">
-    <p style="text-align: center">Subscription number: {{ subscription.id }} Total: ${{ subscription.total_cost }}  Period: {{ subscription.timeframe }}</p>
-    <br>
+    <h4 style="text-align: center">Subscription number: {{ subscription.id }} Total: ${{ subscription.total_cost }}  Period: {{ subscription.timeframe }} </h4>
+    <h4 style="text-align: center"> Created on: {{ subscription.date_created }}  Next Shipment on: {{ subscription.next_shipment }}</h4>
+        <br>
 
     <div class="row">
         <div class="col s3"><h4>Item Name</h4></div>
