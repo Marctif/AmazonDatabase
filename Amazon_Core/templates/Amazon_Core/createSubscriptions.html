@@ -10,15 +10,15 @@
     <div class="container">
         <div class="row">
             <div class="col s4">
-                <h4>Item Name</h4>
+                <h5>Item Name</h5>
             </div>
 
             <div class="col s4">
-                <h4>Cost per Item</h4>
+                <h5>Cost per Item</h5>
             </div>
 
             <div class="col s4">
-                <h4>Number to order</h4>
+                <h5>Number to order</h5>
             </div>
         </div>
         <form action="" method="POST">
@@ -41,23 +41,29 @@
 
         <br>
         <br>
+        <hr style="background-color: #1a237e;height:3px; border-bottom: 1px solid">
+        <br>
         <br>
 
-        <h4 style="text-align: center">Set a reoccuring time period</h4>
+        <h5 style="text-align: center">Set a reoccuring time period</h5>
         {{ form2.as_p }}
 
         <br>
         <br>
+        <hr style="background-color: #1a237e;height:3px; border-bottom: 1px solid">
+        <br>
         <br>
 
-        <h4 style="text-align: center">Set Billing/Shipping address and CreditCard</h4>
+        <h5 style="text-align: center">Set Billing/Shipping address and CreditCard</h5>
         {{ form.as_p }}
 
         <br>
         <br>
+        <hr style="background-color: #1a237e;height:3px; border-bottom: 1px solid">
+        <br>
         <br>
 
-        <h4 style="text-align: center">Check to create an order today (unchecked will mean first order is created in selected time period from today) </h4>
+        <h5 style="text-align: center">Check to create an order today (unchecked will mean first order is created in selected time period from today) </h5>
         <div class="col s12">
                 <input name="tocreate" type="checkbox" id="tocreate" />
                 <label for="tocreate">Order Today</label>

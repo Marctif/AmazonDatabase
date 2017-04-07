@@ -5,26 +5,24 @@
 
     <div class="col-md-12">
     <h1 style="text-align: center" > View Subscriptions</h1>
-    </div>
+    </div></br>
 
     <div class="container">
     <form action="/viewSubscriptions/" method="post">
     {% csrf_token %}
+    <div style="font-size:25px">
         {% for sub in subscriptions %}
-            <div class="row">
-                <div class="col s6">
-                <p>Subscription #{{ sub.id }} - ${{ sub.total_cost }} - {{ sub.timeframe }} <a href="{% url 'subscriptionDetail' sub.id %}">View/Edit subscription template</a> </p>
-                </div>
-                <div class="col s6">
+            <li>
+                <a style="align: left" href="{% url 'subscriptionDetail' sub.id %}">Subscription #{{ sub.id }} - ${{ sub.total_cost }} - {{ sub.timeframe }}</a>
+                <span style="float:right;">
                     <input name="{{  sub.id  }}" type="checkbox" id="{{ sub.id }}" />
                     <label for="{{ sub.id }}">Delete</label>
-                </div>
-                </div>
+                </span>
+            </li></br>
         {% endfor %}
-
-
+    </div>
     <p style="text-align: center">
-    <button style="align: center"  type="submit" name="_submit" class="btn red">Delete templates</button>
+    <button style="align: center"  type="submit" name="_submit" class="btn red">Delete Subscriptions</button>
     </p>
 
     </form>

@@ -4,21 +4,37 @@
 {% block content %}
 
     <div class="col-md-12">
-    <h1 style="text-align: center" > Order Detail</h1>
+    <h1 style="text-align: center" > Order Details</h1>
     </div>
 
     <div class="container">
-    <p style="text-align: center">Order number: {{ order.id }} Total: ${{ order.total_cost }}  Status: {{ order.status }}</p>
+    <p style="text-align: center; font-size: 20px">Order number:{{ order.id }} &emsp;&emsp;&emsp; Total:${{ order.total_cost }} &emsp;&emsp;&emsp;  Status:{{ order.status }}</p>
     <br>
 
     <form action="/viewOrder/{{ order.id }}" method="post">
     {% csrf_token %}
+    <table class="bordered">
+        <thead>
+          <tr>
+              <th>Item</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Sub-total</th>
+              <th>Shipment ID</th>
+              <th>Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
     {% for shipment in shipmentSet %}
-        <div class="row">
-             <div class="col s3"><p>Shipment ID: {{ shipment.id }}</p></div>
-            <div class="col s3"><p>{{ shipment.litem}} </p></div>
-            <div class="col s3"><p>{{ shipment.status}} </p></div>
-            <div class="col s3"><p>
+        <td>{{ shipment.litem.item }}</td>
+        <td>{{ shipment.litem.quantity}}</td>
+        <td>{{ shipment.litem.cost}}</td>
+        <td>{{ shipment.litem.subTotal}}</td>
+        <td>{{ shipment.id}}</td>
+        <td>{{ shipment.status}}</td>
+        <td>
                 {% if shipment.status == 'PI' %}
 
                             <input name="{{  shipment.litem.id  }}" type="checkbox" id="{{ shipment.litem.id }}" />
@@ -34,14 +50,15 @@
                             <input name="{{  shipment.litem.id  }}" type="checkbox" id="{{ shipment.litem.id }}" />
                             <label for="{{ shipment.litem.id }}">Return</label>
                 {% endif %}
-            </p></div>
-
-
-        </div>
+        </td>
     {% endfor %}
+          </tr>
+        </tbody>
+      </table>
     <p style="text-align: center">
     <button style="align: center"  type="submit" name="_submit" class="btn green">Submit Returns</button>
     </p>
+
     </form>
     </div>
 

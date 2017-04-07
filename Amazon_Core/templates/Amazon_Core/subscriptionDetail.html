@@ -4,37 +4,38 @@
 {% block content %}
 
     <div class="col-md-12">
-    <h1 style="text-align: center" > Subscription Detail</h1>
+    <h1 style="text-align: center" > Subscription Details</h1>
     </div>
 
     <div class="container">
-    <h4 style="text-align: center">Subscription number: {{ subscription.id }} Total: ${{ subscription.total_cost }}  Period: {{ subscription.timeframe }} </h4>
-    <h4 style="text-align: center"> Created on: {{ subscription.date_created }}  Next Shipment on: {{ subscription.next_shipment }}</h4>
+    <p style="text-align: center;font-size: 20px">Subscription number: {{ subscription.id }} &emsp;&emsp;&emsp; Total: ${{ subscription.total_cost }} &emsp;&emsp;&emsp; Period: {{ subscription.timeframe }} </p>
+    <p style="text-align: center;font-size: 17px"> Created on: {{ subscription.date_created }} &emsp;&emsp;&emsp; Next Shipment on: {{ subscription.next_shipment }}</p>
         <br>
-
-    <div class="row">
-        <div class="col s3"><h4>Item Name</h4></div>
-        <div class="col s3"><h4>Price</h4></div>
-        <div class="col s3"><h4>Quantity</h4></div>
-        <div class="col s3"><h4>To Delete</h4></div>
-    </div>
-
 
     <form action="/viewSubscriptions/{{ subscription.id }}" method="post">
     {% csrf_token %}
+    <table class="bordered">
+        <thead>
+          <tr>
+              <th>Item</th>
+              <th>Price</th>
+              <th>Quantity</th>
+          </tr>
+        </thead>
+    <tbody>
+    <tr>
     {% for subItem in subItemSet %}
-        <div class="row">
-            <div class="col s3"><p>{{ subItem.item.name }}</p></div>
-            <div class="col s3"><p>${{ subItem.item.price}} </p></div>
-            <div class="col s3"><p>  <input name="{{  subItem.id  }}q" type="text" id="{{ subItem.id }}q" value="{{ subItem.quantity }}" /> </p></div>
-            <div class="col s3"><p>
-                    <input name="{{  subItem.id  }}" type="checkbox" id="{{ subItem.id }}" />
-                    <label for="{{ subItem.id }}">Delete</label>
-            </p></div>
-
-
-        </div>
+        <td>{{ subItem.item.name }}</td>
+        <td>${{ subItem.item.price}}</td>
+        <td style="width:40px;"><input name="{{  subItem.id  }}q" type="text" id="{{ subItem.id }}q" value="{{ subItem.quantity }}" /> </td>
+        <td style="text-align:right">
+            <input name="{{  subItem.id  }}" type="checkbox" id="{{ subItem.id }}" />
+            <label for="{{ subItem.id }}">Delete</label>
+        </td>
     {% endfor %}
+    </tr>
+        </tbody>
+      </table>
     <p style="text-align: center"> <a href="{% url 'addSubItem' subscription.id %}"> Add Item </a> </p>
     <p style="text-align: center">
     <button style="align: center"  type="submit" name="_submit" class="btn green">Submit Changes</button>
