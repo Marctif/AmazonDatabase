@@ -28,6 +28,7 @@
         <tbody>
           <tr>
     {% for shipment in shipmentSet %}
+        <tr>
         <td>{{ shipment.litem.item }}</td>
         <td>{{ shipment.litem.quantity}}</td>
         <td>{{ shipment.litem.cost}}</td>
@@ -51,6 +52,8 @@
                             <label for="{{ shipment.litem.id }}">Return</label>
                 {% endif %}
         </td>
+        </tr>
+
     {% endfor %}
           </tr>
         </tbody>

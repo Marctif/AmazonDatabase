@@ -23,8 +23,9 @@
           </tr>
         </thead>
     <tbody>
-    <tr>
+
     {% for subItem in subItemSet %}
+        <tr>
         <td>{{ subItem.item.name }}</td>
         <td>${{ subItem.item.price}}</td>
         <td style="width:40px;"><input name="{{  subItem.id  }}q" type="text" id="{{ subItem.id }}q" value="{{ subItem.quantity }}" /> </td>
@@ -32,8 +33,9 @@
             <input name="{{  subItem.id  }}" type="checkbox" id="{{ subItem.id }}" />
             <label for="{{ subItem.id }}">Delete</label>
         </td>
+        </tr>
     {% endfor %}
-    </tr>
+
         </tbody>
       </table>
     <p style="text-align: center"> <a href="{% url 'addSubItem' subscription.id %}"> Add Item </a> </p>
