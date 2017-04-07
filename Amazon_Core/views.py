@@ -27,7 +27,8 @@ import datetime
 # Create your views here.
 
 def home(request):
-    checkSubs(request=request)
+    if(not (request.user.is_anonymous())):
+        checkSubs(request=request)
     return render(request, 'Amazon_Core/home.html')
 
 def demo(request):
@@ -47,27 +48,6 @@ def userprofile(request):
     context = {'user': user, 'profile':profile, 'shipping': shipping, 'billing': billing, 'credit': credit}
     template = 'Amazon_Core/profile.html'
     return render(request,template,context)
-
-@login_required
-def user_edit(request):
-
-    if request.method == 'POST':
-        profile_form = CustomerProfileForm(request.POST, instance=request.user.CustomerProfile)
-        shipping_form = ShippingAddressForm(request.POST, instancel=request.user.CustomerProfile.ShippingAddress)
-
-        if all([profile_form.is_valid(), shipping_form.is_valid()]):
-            profile = profile_form.save()
-            shipping = shipping_form.save()
-            return HttpResponseRedirect('/profile/')
-
-    else:
-        profile_form = CustomerProfileForm(instance=request.user.CustomerProfile)
-        shipping_form = ShippingAddressForm(instance=request.user.CustomerProfile.ShippingAddress)
-
-    return render(request, 'Amazon_Core/edit.html', {
-        'profile_form': profile_form,
-        'shipping_form': shipping_form,
-    })
 
 def update_profile(request):
     return render(request, 'Amazon_Core/update_profile.html')
@@ -430,7 +410,7 @@ def checkout(request):
         custProfile = get_object_or_404(CustomerProfile, user=request.user)
 
         form = OrderForm(custProfile,request.POST)
-        if(form.is_fvalid()):
+        if(form.is_valid()):
             latestOrder = Order.objects.latest('id')
 
             billAdr = form.cleaned_data['billAddress']

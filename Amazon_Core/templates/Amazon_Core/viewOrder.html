@@ -6,12 +6,10 @@
     <div class="col-md-12">
     <h1 style="text-align: center" > View Orders</h1>
     </div>
-
-    <div class="container">
+</br>
+    <div style="font-size:25px" class="container">
         {% for order in orderSet %}
-            <div class="row">
-                <p>Order #{{ order.id }} - ${{ order.total_cost }} - {{ order.status }} <a href="{% url 'orderDetail' order.id %}">view order</a> </p>
-            </div>
+            <li><a href="{% url 'orderDetail' order.id %}">Order #{{ order.id }} - ${{ order.total_cost }} - {{ order.status }} </a> </li></br>
         {% endfor %}
     </div>
 
