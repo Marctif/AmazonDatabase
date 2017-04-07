@@ -27,7 +27,8 @@ import datetime
 # Create your views here.
 
 def home(request):
-    checkSubs(request=request)
+    if(not (request.user.is_anonymous())):
+        checkSubs(request=request)
     return render(request, 'Amazon_Core/home.html')
 
 def demo(request):
